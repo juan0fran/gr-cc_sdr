@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/qa_cc_sdr.cc
+qa_cc_sdr.h
+/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/qa_cc_sdr.h
+
+/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/qa_cc_sdr.h
+gnuradio/attributes.h
+-
+cppunit/TestSuite.h
+-
+
+/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/test_cc_sdr.cc
+config.h
+/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/config.h
+cppunit/TextTestRunner.h
+-
+cppunit/XmlOutputter.h
+-
+gnuradio/unittests.h
+-
+qa_cc_sdr.h
+/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/qa_cc_sdr.h
+iostream
+-
+fstream
+-
+

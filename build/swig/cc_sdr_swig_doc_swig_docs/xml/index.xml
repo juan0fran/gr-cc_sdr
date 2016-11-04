@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.8.11">
+  <compound refid="classgr_1_1cc__sdr_1_1cc__decoder" kind="class"><name>gr::cc_sdr::cc_decoder</name>
+    <member refid="classgr_1_1cc__sdr_1_1cc__decoder_1a065ec7b71e20dc8f76b7b523f0a33447" kind="typedef"><name>sptr</name></member>
+    <member refid="classgr_1_1cc__sdr_1_1cc__decoder_1abc38d776ee84b1d8aa76d151f6b7700e" kind="function"><name>make</name></member>
+  </compound>
+  <compound refid="namespacegr" kind="namespace"><name>gr</name>
+  </compound>
+  <compound refid="namespacegr_1_1cc__sdr" kind="namespace"><name>gr::cc_sdr</name>
+  </compound>
+  <compound refid="namespacestd" kind="namespace"><name>std</name>
+  </compound>
+  <compound refid="api_8h" kind="file"><name>api.h</name>
+    <member refid="api_8h_1af29b11fdf0a9d4001e0ba5c26265fd5d" kind="define"><name>CC_SDR_API</name></member>
+  </compound>
+  <compound refid="cc__decoder_8h" kind="file"><name>cc_decoder.h</name>
+  </compound>
+  <compound refid="dir_fcbdb5498d3457008eabad3094a828fa" kind="dir"><name>/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/include/cc_sdr</name>
+  </compound>
+  <compound refid="dir_d44c64559bbebec7f509842c48db8b23" kind="dir"><name>/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/include</name>
+  </compound>
+</doxygenindex>

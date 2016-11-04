@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC -O3 -DNDEBUG  -shared  -o _cc_sdr_swig.so CMakeFiles/_cc_sdr_swig.dir/cc_sdr_swigPYTHON_wrap.cxx.o -lpython2.7 ../lib/libgnuradio-cc_sdr.so -lboost_filesystem -lboost_system -lgnuradio-runtime -lgnuradio-pmt -Wl,-rpath,/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/build/lib: 

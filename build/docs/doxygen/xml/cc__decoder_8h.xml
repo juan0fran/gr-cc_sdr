@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="cc__decoder_8h" kind="file" language="C++">
+    <compoundname>cc_decoder.h</compoundname>
+    <includes refid="api_8h" local="no">cc_sdr/api.h</includes>
+    <includes local="no">gnuradio/block.h</includes>
+    <includedby refid="cc__decoder__impl_8h" local="no">cc_decoder_impl.h</includedby>
+    <incdepgraph>
+      <node id="5">
+        <label>cc_decoder.h</label>
+        <link refid="cc_decoder.h"/>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="6">
+        <label>cc_sdr/api.h</label>
+        <link refid="api_8h"/>
+        <childnode refid="7" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>gnuradio/attributes.h</label>
+      </node>
+      <node id="8">
+        <label>gnuradio/block.h</label>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="9">
+        <label>cc_decoder.h</label>
+        <link refid="cc_decoder.h"/>
+        <childnode refid="10" relation="include">
+        </childnode>
+      </node>
+      <node id="10">
+        <label>cc_decoder_impl.h</label>
+        <link refid="cc__decoder__impl_8h"/>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="classgr_1_1cc__sdr_1_1cc__decoder" prot="public">gr::cc_sdr::cc_decoder</innerclass>
+    <innernamespace refid="namespacegr">gr</innernamespace>
+    <innernamespace refid="namespacegr_1_1cc__sdr">gr::cc_sdr</innernamespace>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/include/cc_sdr/cc_decoder.h"/>
+  </compounddef>
+</doxygen>

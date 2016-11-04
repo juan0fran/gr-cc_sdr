@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.8.11">
+  <compounddef id="trellis__decoder_8h" kind="file" language="C++">
+    <compoundname>trellis_decoder.h</compoundname>
+    <includes local="no">stdint.h</includes>
+    <incdepgraph>
+      <node id="22">
+        <label>stdint.h</label>
+      </node>
+      <node id="21">
+        <label>trellis_decoder.h</label>
+        <link refid="trellis_decoder.h"/>
+        <childnode refid="22" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+      <sectiondef kind="func">
+      <memberdef kind="function" id="trellis__decoder_8h_1a12d113bd8b8d73363f1086e7134a8fe4" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>unsigned short</type>
+        <definition>unsigned short calcCRC</definition>
+        <argsstring>(uint8_t crcData, unsigned short crcReg)</argsstring>
+        <name>calcCRC</name>
+        <param>
+          <type>uint8_t</type>
+          <declname>crcData</declname>
+        </param>
+        <param>
+          <type>unsigned short</type>
+          <declname>crcReg</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/trellis_decoder.h" line="5" column="1"/>
+      </memberdef>
+      <memberdef kind="function" id="trellis__decoder_8h_1a7b2f0636c4a4550744d059160e30d7f7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>unsigned short</type>
+        <definition>unsigned short fecDecode</definition>
+        <argsstring>(uint8_t *pDecData, uint8_t *pInData, unsigned short nRemBytes)</argsstring>
+        <name>fecDecode</name>
+        <param>
+          <type>uint8_t *</type>
+          <declname>pDecData</declname>
+        </param>
+        <param>
+          <type>uint8_t *</type>
+          <declname>pInData</declname>
+        </param>
+        <param>
+          <type>unsigned short</type>
+          <declname>nRemBytes</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/trellis_decoder.h" line="6" column="1"/>
+      </memberdef>
+      </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/trellis_decoder.h"/>
+  </compounddef>
+</doxygen>
