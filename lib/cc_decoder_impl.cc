@@ -34,6 +34,8 @@ extern "C" {
   #include "trellis_decoder.h"
 }
 
+#undef DEBUG
+
 namespace gr {
   namespace cc_sdr {
 
@@ -58,7 +60,7 @@ namespace gr {
         d_plen = plen + 2; /* packet + crc */
       }else{
         if (has_rs == true){
-          d_plen = plen*2 + 4; /* packet*2 + trellis header*2 */
+          d_plen = plen*2 + 8; /* packet*2 + trellis header*2 */
           d_coded_len = plen;
           d_uncoded_len = d_coded_len - 32;
         }else{
@@ -117,11 +119,13 @@ namespace gr {
       uint8_t uncodedPacket[d_uncoded_len];
 
       memcpy(data, pmt::uniform_vector_elements(msg, offset), sizeof(data));
-
+    
+      #ifdef DEBUG
       std::cout << "Received data:" << std::endl;
       for(int i = 0; i < d_plen; i++)
         std::printf ("0x%02X%s" , data[i], (i % 8 == 7) ? "\n" : " ");
       std::cout << std::endl;
+      #endif 
       
       if (d_has_fec == true){
         uint8_t *pDecData = rxPacket;
@@ -143,22 +147,45 @@ namespace gr {
           pDecData += nBytesOut;
           c = c + 4;
         }
+        #ifdef DEBUG
         std::cout << "Decoded data:" << std::endl;
         for(int i = 0; i < d_reclen; i++)
-          std::printf ("0x%02X%s" , rxPacket[i], (i % 8 == 7) ? "\n" : " ");
+          std::printf("0x%02X%s" , rxPacket[i], (i % 8 == 7) ? "\n" : " ");
         std::cout << std::endl;
-
+        #endif 
+        
         if (d_has_rs == true){
-          std::cout << "NOT IMPLEMENTED YET" << std::endl;
-          /* decode rs */
-          if (decode_rs_message(rxPacket, d_coded_len, uncodedPacket, d_uncoded_len) == d_uncoded_len){
-            /* if decode true */
+          std::cout << "Goin to check CRC from received packet" << std::endl;
+          /* rx packet already has the decoded data from the FEC */
+          /* Perform checksum */
+          checksum = 0xFFFF;
+          // Init value for CRC calculation
+          /* Go from d_reclen+2, which is the received length plus the CRC */
+          for (int i = 0; i < (d_coded_len + 2); i++){
+              checksum = calcCRC(rxPacket[i], checksum);
+          }
+          /* if the previous calculous is 0, then CRC ok */
+          if (!checksum){
+            std::cout << "CRC OK" << std::endl;
             message_port_pub(pmt::mp("out"),
-                pmt::cons(pmt::PMT_NIL,
-                pmt::init_u8vector(d_uncoded_len, uncodedPacket)));
+              pmt::cons(pmt::PMT_NIL,
+              pmt::init_u8vector(d_uncoded_len, rxPacket)));
+          }else{
+              std::cout << "CRC NO OK, trying to RS decode" << std::endl;              
+              /* decode rs */
+              if (decode_rs_message(rxPacket, d_coded_len, uncodedPacket, d_uncoded_len) == d_uncoded_len){
+                /* if decode true */
+                std::cout << "RS Decode went OK!!" << std::endl;
+                message_port_pub(pmt::mp("out"),
+                    pmt::cons(pmt::PMT_NIL,
+                    pmt::init_u8vector(d_uncoded_len, uncodedPacket)));
+              }else{
+                std::cout << "Packet recovery failed, broken packet!!" << std::endl;
+              }
           }
         }else{
-          memcpy(rxPacket, data, d_reclen+2);
+          std::cout << "Goin to check CRC from received packet" << std::endl;
+          /* rx packet already has the decoded data from the FEC */
           /* Perform checksum */
           checksum = 0xFFFF;
           // Init value for CRC calculation
