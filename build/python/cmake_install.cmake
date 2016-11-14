@@ -33,13 +33,18 @@ if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/cc_sdr" TYPE FILE FILES "/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/python/__init__.py")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/cc_sdr" TYPE FILE FILES
+    "/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/python/__init__.py"
+    "/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/python/fixedlen_packet_synchronizer.py"
+    )
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/cc_sdr" TYPE FILE FILES
     "/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/build/python/__init__.pyc"
+    "/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/build/python/fixedlen_packet_synchronizer.pyc"
     "/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/build/python/__init__.pyo"
+    "/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/build/python/fixedlen_packet_synchronizer.pyo"
     )
 endif()
 

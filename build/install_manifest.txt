@@ -9,9 +9,13 @@
 /usr/local/include/cc_sdr/cc_sdr/swig/cc_sdr_swig.i
 /usr/local/include/cc_sdr/cc_sdr/swig/cc_sdr_swig_doc.i
 /usr/local/lib/python2.7/dist-packages/cc_sdr/__init__.py
+/usr/local/lib/python2.7/dist-packages/cc_sdr/fixedlen_packet_synchronizer.py
 /usr/local/lib/python2.7/dist-packages/cc_sdr/__init__.pyc
+/usr/local/lib/python2.7/dist-packages/cc_sdr/fixedlen_packet_synchronizer.pyc
 /usr/local/lib/python2.7/dist-packages/cc_sdr/__init__.pyo
+/usr/local/lib/python2.7/dist-packages/cc_sdr/fixedlen_packet_synchronizer.pyo
 /usr/local/share/gnuradio/grc/blocks/cc_sdr_cc_decoder.xml
+/usr/local/share/gnuradio/grc/blocks/cc_sdr_fixedlen_packet_synchronizer.xml
 /usr/local/share/doc/gr-cc_sdr/xml/main__page_8dox.xml
 /usr/local/share/doc/gr-cc_sdr/xml/classgr_1_1cc__sdr_1_1cc__decoder__impl.xml
 /usr/local/share/doc/gr-cc_sdr/xml/group__defs_8dox.xml

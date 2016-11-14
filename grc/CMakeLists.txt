@@ -18,5 +18,6 @@
 # Boston, MA 02110-1301, USA.
 
 install(FILES
-    cc_sdr_cc_decoder.xml DESTINATION share/gnuradio/grc/blocks
+    cc_sdr_cc_decoder.xml
+    cc_sdr_fixedlen_packet_synchronizer.xml DESTINATION share/gnuradio/grc/blocks
 )

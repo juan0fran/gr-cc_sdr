@@ -33,6 +33,9 @@ if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gnuradio/grc/blocks" TYPE FILE FILES "/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/grc/cc_sdr_cc_decoder.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/gnuradio/grc/blocks" TYPE FILE FILES
+    "/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/grc/cc_sdr_cc_decoder.xml"
+    "/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/grc/cc_sdr_fixedlen_packet_synchronizer.xml"
+    )
 endif()
 

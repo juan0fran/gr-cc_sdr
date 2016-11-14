@@ -36,6 +36,14 @@ extern "C" {
 
 #undef DEBUG
 
+#ifdef DEBUG
+void
+byte_err (int loc, unsigned char *dst)
+{
+  dst[loc-1] ^= (rand()%256);
+}
+#endif
+
 namespace gr {
   namespace cc_sdr {
 
@@ -123,10 +131,35 @@ namespace gr {
       #ifdef DEBUG
       std::cout << "Received data:" << std::endl;
       for(int i = 0; i < d_plen; i++)
-        std::printf ("0x%02X%s" , data[i], (i % 8 == 7) ? "\n" : " ");
+        std::printf ("0x%02X%s" , data[i], (i % 16 == 15) ? "\n" : " ");
       std::cout << std::endl;
       #endif 
       
+      /* introduce errors to DATA */
+      #ifdef DEBUG
+      byte_err(rand()%255, data);
+      byte_err(rand()%255, data);
+      byte_err(rand()%255, data);
+      byte_err(rand()%255, data);
+      byte_err(rand()%255, data);
+      byte_err(rand()%255, data);
+      byte_err(rand()%255, data);
+      byte_err(rand()%255, data);
+      byte_err(rand()%255, data);
+      byte_err(rand()%255, data);
+      byte_err(rand()%255, data);
+      byte_err(rand()%255, data);
+      byte_err(rand()%255, data);
+      byte_err(rand()%255, data);
+      #endif
+
+      #ifdef DEBUG
+      std::cout << "Modified data:" << std::endl;
+      for(int i = 0; i < d_plen; i++)
+        std::printf ("0x%02X%s" , data[i], (i % 16 == 15) ? "\n" : " ");
+      std::cout << std::endl;
+      #endif 
+
       if (d_has_fec == true){
         uint8_t *pDecData = rxPacket;
         /* initialize fecDecoder */
@@ -150,7 +183,7 @@ namespace gr {
         #ifdef DEBUG
         std::cout << "Decoded data:" << std::endl;
         for(int i = 0; i < d_reclen; i++)
-          std::printf("0x%02X%s" , rxPacket[i], (i % 8 == 7) ? "\n" : " ");
+          std::printf("0x%02X%s" , rxPacket[i], (i % 16 == 15) ? "\n" : " ");
         std::cout << std::endl;
         #endif 
         

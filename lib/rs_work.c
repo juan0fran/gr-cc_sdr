@@ -686,8 +686,13 @@ decode_rs_message(  unsigned char * coded_message, int coded_len,
     /* errors on the received packet */
     /* This functions returns 1 if OK */
     if (correct_errors_erasures(coded_message, coded_len, 0, NULL) == 1){
-      memcpy(uncoded_message, coded_message, uncoded_len);
-      return uncoded_len;
+      decode_data(coded_message, coded_len);
+      if (check_syndrome() == 0){
+        memcpy(uncoded_message, coded_message, uncoded_len);
+        return uncoded_len;
+      }else{
+        return 0;
+      }
     }else{
       return 0;
     }
