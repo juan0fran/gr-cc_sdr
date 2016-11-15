@@ -21,6 +21,8 @@ config.h
 /home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/config.h
 string.h
 -
+time.h
+-
 cstdio
 -
 gnuradio/io_signature.h

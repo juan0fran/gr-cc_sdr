@@ -35,6 +35,8 @@ namespace gr {
       int  d_reclen;
       int  d_uncoded_len;
       int  d_coded_len;
+
+      int  d_correct;
       // Nothing to declare in this block.
 
      public:

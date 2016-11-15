@@ -23,7 +23,7 @@
 #endif
 
 #include <string.h>
-
+#include <time.h>
 #include <cstdio>
 
 #include <gnuradio/io_signature.h>
@@ -76,6 +76,8 @@ namespace gr {
         }
       }
       d_reclen = plen;
+      
+      d_correct = 0;
 
       std::cout << "Has FEC: " << has_fec << ". Has RS: " << has_rs << std::endl;
       std::cout << "Full packet len: " << d_plen << std::endl;
@@ -188,7 +190,9 @@ namespace gr {
         #endif 
         
         if (d_has_rs == true){
+          #ifdef DEBUG
           std::cout << "Goin to check CRC from received packet" << std::endl;
+          #endif
           /* rx packet already has the decoded data from the FEC */
           /* Perform checksum */
           checksum = 0xFFFF;
@@ -199,7 +203,11 @@ namespace gr {
           }
           /* if the previous calculous is 0, then CRC ok */
           if (!checksum){
+            #ifdef DEBUG
             std::cout << "CRC OK" << std::endl;
+            #endif
+            d_correct += 1;
+            std::cout << "Ok decoded: " << d_correct << " Timer: " << time(NULL) << std::endl;
             message_port_pub(pmt::mp("out"),
               pmt::cons(pmt::PMT_NIL,
               pmt::init_u8vector(d_uncoded_len, rxPacket)));
@@ -209,6 +217,8 @@ namespace gr {
               if (decode_rs_message(rxPacket, d_coded_len, uncodedPacket, d_uncoded_len) == d_uncoded_len){
                 /* if decode true */
                 std::cout << "RS Decode went OK!!" << std::endl;
+                d_correct += 1;
+                std::cout << "Ok decoded: " << d_correct << " Timer: " << time(NULL) << std::endl;
                 message_port_pub(pmt::mp("out"),
                     pmt::cons(pmt::PMT_NIL,
                     pmt::init_u8vector(d_uncoded_len, uncodedPacket)));
@@ -217,7 +227,9 @@ namespace gr {
               }
           }
         }else{
+          #ifdef DEBUG
           std::cout << "Goin to check CRC from received packet" << std::endl;
+          #endif
           /* rx packet already has the decoded data from the FEC */
           /* Perform checksum */
           checksum = 0xFFFF;
@@ -229,6 +241,8 @@ namespace gr {
           /* if the previous calculous is 0, then CRC ok */
           if (!checksum){
             std::cout << "CRC OK" << std::endl;
+            d_correct += 1;
+            std::cout << "Ok decoded: " << d_correct << " Timer: " << time(NULL) << std::endl;
             message_port_pub(pmt::mp("out"),
               pmt::cons(pmt::PMT_NIL,
               pmt::init_u8vector(d_reclen, rxPacket)));
@@ -246,7 +260,11 @@ namespace gr {
         }
         /* if the previous calculous is 0, then CRC ok */
         if (!checksum){
+          #ifdef DEBUG
           std::cout << "CRC OK" << std::endl;
+          #endif
+          d_correct += 1;
+          std::cout << "Ok decoded: " << d_correct << " Timer: " << time(NULL) << std::endl;
           message_port_pub(pmt::mp("out"),
             pmt::cons(pmt::PMT_NIL,
             pmt::init_u8vector(d_reclen, rxPacket)));
