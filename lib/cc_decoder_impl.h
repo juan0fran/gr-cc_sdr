@@ -39,6 +39,9 @@ namespace gr {
       int  d_coded_len;
 
       int  d_correct;
+      int  d_correct_without_rs;
+      int  d_correct_with_rs;
+      int  d_incorrect;
       // Nothing to declare in this block.
 
      public:

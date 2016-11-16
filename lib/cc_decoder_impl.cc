@@ -127,8 +127,11 @@ namespace gr {
       d_reclen = plen;
       
       d_correct = 0;
+      d_correct_without_rs = 0;
+      d_correct_with_rs = 0;
+      d_incorrect = 0;
 
-      std::cout << "Has FEC: " << has_fec << ". Has RS: " << has_rs << std::endl;
+      std::cout << "Has FEC: " << has_fec << ". Has RS: " << has_rs << ". Has White: " << has_white << std::endl;
       std::cout << "Full packet len: " << d_plen << std::endl;
       std::cout << "Received packet len: " << d_reclen << std::endl;
       std::cout << "RS Encoded len: " << d_coded_len << ". RS Decoded len: " << d_uncoded_len << std::endl;
@@ -206,15 +209,15 @@ namespace gr {
           pDecData += nBytesOut;
           c = c + 4;
         }
+        if (d_has_white == true){
+          xor_pn9(rxPacket, d_reclen + 2);
+        }
         #ifdef DEBUG
         std::cout << "Decoded data:" << std::endl;
         for(int i = 0; i < d_reclen; i++)
           std::printf("0x%02X%s" , rxPacket[i], (i % 16 == 15) ? "\n" : " ");
         std::cout << std::endl;
-        #endif 
-        if (d_has_white == true){
-          xor_pn9(rxPacket, d_reclen + 2);
-        }
+        #endif         
         if (d_has_rs == true){
           #ifdef DEBUG
           std::cout << "Goin to check CRC from received packet" << std::endl;
@@ -233,23 +236,24 @@ namespace gr {
             std::cout << "CRC OK" << std::endl;
             #endif
             d_correct += 1;
-            std::cout << "Ok decoded: " << d_correct << " Timer: " << time(NULL) << std::endl;
+            d_correct_without_rs += 1;
+            std::cout << "Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;            
             message_port_pub(pmt::mp("out"),
               pmt::cons(pmt::PMT_NIL,
               pmt::init_u8vector(d_uncoded_len, rxPacket)));
           }else{
-              std::cout << "CRC NO OK, trying to RS decode" << std::endl;              
               /* decode rs */
               if (decode_rs_message(rxPacket, d_coded_len, uncodedPacket, d_uncoded_len) == d_uncoded_len){
                 /* if decode true */
-                std::cout << "RS Decode went OK!!" << std::endl;
                 d_correct += 1;
-                std::cout << "Ok decoded: " << d_correct << " Timer: " << time(NULL) << std::endl;
+                d_correct_with_rs += 1;
+                std::cout << "Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;
                 message_port_pub(pmt::mp("out"),
                     pmt::cons(pmt::PMT_NIL,
                     pmt::init_u8vector(d_uncoded_len, uncodedPacket)));
               }else{
-                std::cout << "Packet recovery failed, broken packet!!" << std::endl;
+                d_incorrect += 1;
+                std::cout << "Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;
               }
           }
         }else{
