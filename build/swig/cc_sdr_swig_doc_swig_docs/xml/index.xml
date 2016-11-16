@@ -2,7 +2,7 @@
 <doxygenindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="index.xsd" version="1.8.11">
   <compound refid="classgr_1_1cc__sdr_1_1cc__decoder" kind="class"><name>gr::cc_sdr::cc_decoder</name>
     <member refid="classgr_1_1cc__sdr_1_1cc__decoder_1a065ec7b71e20dc8f76b7b523f0a33447" kind="typedef"><name>sptr</name></member>
-    <member refid="classgr_1_1cc__sdr_1_1cc__decoder_1abc38d776ee84b1d8aa76d151f6b7700e" kind="function"><name>make</name></member>
+    <member refid="classgr_1_1cc__sdr_1_1cc__decoder_1a78071f054bb70155a0d334b942066608" kind="function"><name>make</name></member>
   </compound>
   <compound refid="namespacegr" kind="namespace"><name>gr</name>
   </compound>

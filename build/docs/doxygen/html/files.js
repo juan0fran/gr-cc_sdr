@@ -7,5 +7,6 @@ var files =
     [ "cc_decoder_impl.h", "cc__decoder__impl_8h.html", [
       [ "cc_decoder_impl", "classgr_1_1cc__sdr_1_1cc__decoder__impl.html", "classgr_1_1cc__sdr_1_1cc__decoder__impl" ]
     ] ],
+    [ "rs_work.h", "rs__work_8h.html", "rs__work_8h" ],
     [ "trellis_decoder.h", "trellis__decoder_8h.html", "trellis__decoder_8h" ]
 ];

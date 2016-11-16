@@ -46,7 +46,7 @@ namespace gr {
        * class. cc_sdr::cc_decoder::make is the public interface for
        * creating new instances.
        */
-      static sptr make(bool has_fec, bool has_rs, int plen);
+      static sptr make(bool has_fec, bool has_rs, bool has_white, int plen);
     };
 
   } // namespace cc_sdr

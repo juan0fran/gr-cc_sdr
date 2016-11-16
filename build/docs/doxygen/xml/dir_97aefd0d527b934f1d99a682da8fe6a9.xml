@@ -3,6 +3,7 @@
   <compounddef id="dir_97aefd0d527b934f1d99a682da8fe6a9" kind="dir">
     <compoundname>lib</compoundname>
     <innerfile refid="cc__decoder__impl_8h">cc_decoder_impl.h</innerfile>
+    <innerfile refid="rs__work_8h">rs_work.h</innerfile>
     <innerfile refid="trellis__decoder_8h">trellis_decoder.h</innerfile>
     <briefdescription>
     </briefdescription>

@@ -124,17 +124,17 @@ class cc_decoder(object):
         raise AttributeError("No constructor defined")
     __repr__ = _swig_repr
 
-    def make(has_fec, has_rs, plen):
+    def make(has_fec, has_rs, has_white, plen):
         """
-        make(bool has_fec, bool has_rs, int plen) -> cc_decoder_sptr
+        make(bool has_fec, bool has_rs, bool has_white, int plen) -> cc_decoder_sptr
 
         Return a shared_ptr to a new instance of cc_sdr::cc_decoder.
 
         To avoid accidental use of raw pointers, cc_sdr::cc_decoder's constructor is in a private implementation class. cc_sdr::cc_decoder::make is the public interface for creating new instances.
 
-        Params: (has_fec, has_rs, plen)
+        Params: (has_fec, has_rs, has_white, plen)
         """
-        return _cc_sdr_swig.cc_decoder_make(has_fec, has_rs, plen)
+        return _cc_sdr_swig.cc_decoder_make(has_fec, has_rs, has_white, plen)
 
     make = staticmethod(make)
     __swig_destroy__ = _cc_sdr_swig.delete_cc_decoder
@@ -142,17 +142,17 @@ class cc_decoder(object):
 cc_decoder_swigregister = _cc_sdr_swig.cc_decoder_swigregister
 cc_decoder_swigregister(cc_decoder)
 
-def cc_decoder_make(has_fec, has_rs, plen):
+def cc_decoder_make(has_fec, has_rs, has_white, plen):
     """
-    cc_decoder_make(bool has_fec, bool has_rs, int plen) -> cc_decoder_sptr
+    cc_decoder_make(bool has_fec, bool has_rs, bool has_white, int plen) -> cc_decoder_sptr
 
     Return a shared_ptr to a new instance of cc_sdr::cc_decoder.
 
     To avoid accidental use of raw pointers, cc_sdr::cc_decoder's constructor is in a private implementation class. cc_sdr::cc_decoder::make is the public interface for creating new instances.
 
-    Params: (has_fec, has_rs, plen)
+    Params: (has_fec, has_rs, has_white, plen)
     """
-    return _cc_sdr_swig.cc_decoder_make(has_fec, has_rs, plen)
+    return _cc_sdr_swig.cc_decoder_make(has_fec, has_rs, has_white, plen)
 
 class cc_decoder_sptr(object):
     """Proxy of C++ boost::shared_ptr<(gr::cc_sdr::cc_decoder)> class."""
@@ -178,17 +178,17 @@ class cc_decoder_sptr(object):
     __swig_destroy__ = _cc_sdr_swig.delete_cc_decoder_sptr
     __del__ = lambda self: None
 
-    def make(self, has_fec, has_rs, plen):
+    def make(self, has_fec, has_rs, has_white, plen):
         """
-        make(cc_decoder_sptr self, bool has_fec, bool has_rs, int plen) -> cc_decoder_sptr
+        make(cc_decoder_sptr self, bool has_fec, bool has_rs, bool has_white, int plen) -> cc_decoder_sptr
 
         Return a shared_ptr to a new instance of cc_sdr::cc_decoder.
 
         To avoid accidental use of raw pointers, cc_sdr::cc_decoder's constructor is in a private implementation class. cc_sdr::cc_decoder::make is the public interface for creating new instances.
 
-        Params: (has_fec, has_rs, plen)
+        Params: (has_fec, has_rs, has_white, plen)
         """
-        return _cc_sdr_swig.cc_decoder_sptr_make(self, has_fec, has_rs, plen)
+        return _cc_sdr_swig.cc_decoder_sptr_make(self, has_fec, has_rs, has_white, plen)
 
 
     def history(self):

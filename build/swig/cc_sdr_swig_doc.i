@@ -14,4 +14,4 @@
 
 To avoid accidental use of raw pointers, cc_sdr::cc_decoder's constructor is in a private implementation class. cc_sdr::cc_decoder::make is the public interface for creating new instances.
 
-Params: (has_fec, has_rs, plen)"
+Params: (has_fec, has_rs, has_white, plen)"

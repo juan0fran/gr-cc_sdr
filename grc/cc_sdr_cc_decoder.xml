@@ -3,7 +3,7 @@
   <key>cc_sdr_cc_decoder</key>
   <category>CC_SDR</category>
   <import>import cc_sdr</import>
-  <make>cc_sdr.cc_decoder($has_fec, $has_rs, $plen)</make>
+  <make>cc_sdr.cc_decoder($has_fec, $has_rs, $has_white, $plen)</make>
   <param>
     <name>Viterbi FEC</name>
     <key>has_fec</key>
@@ -30,6 +30,19 @@
        <key>False</key>
      </option>
   </param>  
+  <param>
+    <name>Whitening</name>
+    <key>has_white</key>
+    <type>bool</type>
+     <option>
+       <name>Yes</name>
+       <key>True</key>
+     </option>
+     <option>
+       <name>No</name>
+       <key>False</key>
+     </option>
+  </param>   
   <param>
     <name>Plen</name>
     <key>plen</key>

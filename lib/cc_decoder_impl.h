@@ -31,6 +31,8 @@ namespace gr {
      private:
       bool d_has_fec;
       bool d_has_rs;
+      bool d_has_white;
+
       int  d_plen;
       int  d_reclen;
       int  d_uncoded_len;
@@ -40,7 +42,7 @@ namespace gr {
       // Nothing to declare in this block.
 
      public:
-      cc_decoder_impl(bool has_fec, bool has_rs, int plen);
+      cc_decoder_impl(bool has_fec, bool has_rs, bool has_white, int plen);
       ~cc_decoder_impl();
 
       // Where all the action really happens

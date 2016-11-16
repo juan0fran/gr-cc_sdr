@@ -21,10 +21,10 @@
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-static-func">
-      <memberdef kind="function" id="classgr_1_1cc__sdr_1_1cc__decoder_1abc38d776ee84b1d8aa76d151f6b7700e" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="classgr_1_1cc__sdr_1_1cc__decoder_1a78071f054bb70155a0d334b942066608" prot="public" static="yes" const="no" explicit="no" inline="no" virt="non-virtual">
         <type><ref refid="classgr_1_1cc__sdr_1_1cc__decoder_1a065ec7b71e20dc8f76b7b523f0a33447" kindref="member">sptr</ref></type>
         <definition>static sptr gr::cc_sdr::cc_decoder::make</definition>
-        <argsstring>(bool has_fec, bool has_rs, int plen)</argsstring>
+        <argsstring>(bool has_fec, bool has_rs, bool has_white, int plen)</argsstring>
         <name>make</name>
         <param>
           <type>bool</type>
@@ -35,13 +35,17 @@
           <declname>has_rs</declname>
         </param>
         <param>
+          <type>bool</type>
+          <declname>has_white</declname>
+        </param>
+        <param>
           <type>int</type>
           <declname>plen</declname>
         </param>
         <briefdescription>
 <para>Return a shared_ptr to a new instance of <ref refid="classgr_1_1cc__sdr_1_1cc__decoder" kindref="compound">cc_sdr::cc_decoder</ref>. </para>        </briefdescription>
         <detaileddescription>
-<para>To avoid accidental use of raw pointers, <ref refid="classgr_1_1cc__sdr_1_1cc__decoder" kindref="compound">cc_sdr::cc_decoder</ref>&apos;s constructor is in a private implementation class. <ref refid="classgr_1_1cc__sdr_1_1cc__decoder_1abc38d776ee84b1d8aa76d151f6b7700e" kindref="member">cc_sdr::cc_decoder::make</ref> is the public interface for creating new instances. </para>        </detaileddescription>
+<para>To avoid accidental use of raw pointers, <ref refid="classgr_1_1cc__sdr_1_1cc__decoder" kindref="compound">cc_sdr::cc_decoder</ref>&apos;s constructor is in a private implementation class. <ref refid="classgr_1_1cc__sdr_1_1cc__decoder_1a78071f054bb70155a0d334b942066608" kindref="member">cc_sdr::cc_decoder::make</ref> is the public interface for creating new instances. </para>        </detaileddescription>
         <inbodydescription>
         </inbodydescription>
         <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/include/cc_sdr/cc_decoder.h" line="49" column="1"/>
@@ -81,7 +85,7 @@
     </collaborationgraph>
     <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/include/cc_sdr/cc_decoder.h" line="37" column="1" bodyfile="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/include/cc_sdr/cc_decoder.h" bodystart="36" bodyend="50"/>
     <listofallmembers>
-      <member refid="classgr_1_1cc__sdr_1_1cc__decoder_1abc38d776ee84b1d8aa76d151f6b7700e" prot="public" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder</scope><name>make</name></member>
+      <member refid="classgr_1_1cc__sdr_1_1cc__decoder_1a78071f054bb70155a0d334b942066608" prot="public" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder</scope><name>make</name></member>
       <member refid="classgr_1_1cc__sdr_1_1cc__decoder_1a065ec7b71e20dc8f76b7b523f0a33447" prot="public" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder</scope><name>sptr</name></member>
     </listofallmembers>
   </compounddef>

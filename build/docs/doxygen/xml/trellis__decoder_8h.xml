@@ -4,13 +4,13 @@
     <compoundname>trellis_decoder.h</compoundname>
     <includes local="no">stdint.h</includes>
     <incdepgraph>
-      <node id="22">
+      <node id="24">
         <label>stdint.h</label>
       </node>
-      <node id="21">
+      <node id="23">
         <label>trellis_decoder.h</label>
         <link refid="trellis_decoder.h"/>
-        <childnode refid="22" relation="include">
+        <childnode refid="24" relation="include">
         </childnode>
       </node>
     </incdepgraph>

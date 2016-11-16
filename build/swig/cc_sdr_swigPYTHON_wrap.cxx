@@ -5099,22 +5099,26 @@ SWIGINTERN PyObject *_wrap_cc_decoder_make(PyObject *SWIGUNUSEDPARM(self), PyObj
   PyObject *resultobj = 0;
   bool arg1 ;
   bool arg2 ;
-  int arg3 ;
+  bool arg3 ;
+  int arg4 ;
   bool val1 ;
   int ecode1 = 0 ;
   bool val2 ;
   int ecode2 = 0 ;
-  int val3 ;
+  bool val3 ;
   int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
   char *  kwnames[] = {
-    (char *) "has_fec",(char *) "has_rs",(char *) "plen", NULL 
+    (char *) "has_fec",(char *) "has_rs",(char *) "has_white",(char *) "plen", NULL 
   };
   gr::cc_sdr::cc_decoder::sptr result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OOO:cc_decoder_make",kwnames,&obj0,&obj1,&obj2)) SWIG_fail;
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OOOO:cc_decoder_make",kwnames,&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
   ecode1 = SWIG_AsVal_bool(obj0, &val1);
   if (!SWIG_IsOK(ecode1)) {
     SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "cc_decoder_make" "', argument " "1"" of type '" "bool""'");
@@ -5125,14 +5129,19 @@ SWIGINTERN PyObject *_wrap_cc_decoder_make(PyObject *SWIGUNUSEDPARM(self), PyObj
     SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "cc_decoder_make" "', argument " "2"" of type '" "bool""'");
   } 
   arg2 = static_cast< bool >(val2);
-  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  ecode3 = SWIG_AsVal_bool(obj2, &val3);
   if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "cc_decoder_make" "', argument " "3"" of type '" "int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "cc_decoder_make" "', argument " "3"" of type '" "bool""'");
   } 
-  arg3 = static_cast< int >(val3);
+  arg3 = static_cast< bool >(val3);
+  ecode4 = SWIG_AsVal_int(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "cc_decoder_make" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
   {
     try {
-      result = gr::cc_sdr::cc_decoder::make(arg1,arg2,arg3);
+      result = gr::cc_sdr::cc_decoder::make(arg1,arg2,arg3,arg4);
     }
     catch(std::exception &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -5349,25 +5358,29 @@ SWIGINTERN PyObject *_wrap_cc_decoder_sptr_make(PyObject *SWIGUNUSEDPARM(self), 
   boost::shared_ptr< gr::cc_sdr::cc_decoder > *arg1 = (boost::shared_ptr< gr::cc_sdr::cc_decoder > *) 0 ;
   bool arg2 ;
   bool arg3 ;
-  int arg4 ;
+  bool arg4 ;
+  int arg5 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   bool val2 ;
   int ecode2 = 0 ;
   bool val3 ;
   int ecode3 = 0 ;
-  int val4 ;
+  bool val4 ;
   int ecode4 = 0 ;
+  int val5 ;
+  int ecode5 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
   PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
   char *  kwnames[] = {
-    (char *) "self",(char *) "has_fec",(char *) "has_rs",(char *) "plen", NULL 
+    (char *) "self",(char *) "has_fec",(char *) "has_rs",(char *) "has_white",(char *) "plen", NULL 
   };
   gr::cc_sdr::cc_decoder::sptr result;
   
-  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OOOO:cc_decoder_sptr_make",kwnames,&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  if (!PyArg_ParseTupleAndKeywords(args,kwargs,(char *)"OOOOO:cc_decoder_sptr_make",kwnames,&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_boost__shared_ptrT_gr__cc_sdr__cc_decoder_t, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "cc_decoder_sptr_make" "', argument " "1"" of type '" "boost::shared_ptr< gr::cc_sdr::cc_decoder > *""'"); 
@@ -5383,14 +5396,19 @@ SWIGINTERN PyObject *_wrap_cc_decoder_sptr_make(PyObject *SWIGUNUSEDPARM(self), 
     SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "cc_decoder_sptr_make" "', argument " "3"" of type '" "bool""'");
   } 
   arg3 = static_cast< bool >(val3);
-  ecode4 = SWIG_AsVal_int(obj3, &val4);
+  ecode4 = SWIG_AsVal_bool(obj3, &val4);
   if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "cc_decoder_sptr_make" "', argument " "4"" of type '" "int""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "cc_decoder_sptr_make" "', argument " "4"" of type '" "bool""'");
   } 
-  arg4 = static_cast< int >(val4);
+  arg4 = static_cast< bool >(val4);
+  ecode5 = SWIG_AsVal_int(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "cc_decoder_sptr_make" "', argument " "5"" of type '" "int""'");
+  } 
+  arg5 = static_cast< int >(val5);
   {
     try {
-      result = (*arg1)->make(arg2,arg3,arg4);
+      result = (*arg1)->make(arg2,arg3,arg4,arg5);
     }
     catch(std::exception &e) {
       SWIG_exception(SWIG_RuntimeError, e.what());
@@ -8312,13 +8330,13 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"high_res_timer_tps", _wrap_high_res_timer_tps, METH_VARARGS, (char *)"high_res_timer_tps() -> gr::high_res_timer_type"},
 	 { (char *)"high_res_timer_epoch", _wrap_high_res_timer_epoch, METH_VARARGS, (char *)"high_res_timer_epoch() -> gr::high_res_timer_type"},
 	 { (char *)"cc_decoder_make", (PyCFunction) _wrap_cc_decoder_make, METH_VARARGS | METH_KEYWORDS, (char *)"\n"
-		"cc_decoder_make(bool has_fec, bool has_rs, int plen) -> cc_decoder_sptr\n"
+		"cc_decoder_make(bool has_fec, bool has_rs, bool has_white, int plen) -> cc_decoder_sptr\n"
 		"\n"
 		"Return a shared_ptr to a new instance of cc_sdr::cc_decoder.\n"
 		"\n"
 		"To avoid accidental use of raw pointers, cc_sdr::cc_decoder's constructor is in a private implementation class. cc_sdr::cc_decoder::make is the public interface for creating new instances.\n"
 		"\n"
-		"Params: (has_fec, has_rs, plen)\n"
+		"Params: (has_fec, has_rs, has_white, plen)\n"
 		""},
 	 { (char *)"delete_cc_decoder", _wrap_delete_cc_decoder, METH_VARARGS, (char *)"delete_cc_decoder(cc_decoder self)"},
 	 { (char *)"cc_decoder_swigregister", cc_decoder_swigregister, METH_VARARGS, NULL},
@@ -8329,13 +8347,13 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"cc_decoder_sptr___deref__", _wrap_cc_decoder_sptr___deref__, METH_VARARGS, (char *)"cc_decoder_sptr___deref__(cc_decoder_sptr self) -> cc_decoder"},
 	 { (char *)"delete_cc_decoder_sptr", _wrap_delete_cc_decoder_sptr, METH_VARARGS, (char *)"delete_cc_decoder_sptr(cc_decoder_sptr self)"},
 	 { (char *)"cc_decoder_sptr_make", (PyCFunction) _wrap_cc_decoder_sptr_make, METH_VARARGS | METH_KEYWORDS, (char *)"\n"
-		"cc_decoder_sptr_make(cc_decoder_sptr self, bool has_fec, bool has_rs, int plen) -> cc_decoder_sptr\n"
+		"cc_decoder_sptr_make(cc_decoder_sptr self, bool has_fec, bool has_rs, bool has_white, int plen) -> cc_decoder_sptr\n"
 		"\n"
 		"Return a shared_ptr to a new instance of cc_sdr::cc_decoder.\n"
 		"\n"
 		"To avoid accidental use of raw pointers, cc_sdr::cc_decoder's constructor is in a private implementation class. cc_sdr::cc_decoder::make is the public interface for creating new instances.\n"
 		"\n"
-		"Params: (has_fec, has_rs, plen)\n"
+		"Params: (has_fec, has_rs, has_white, plen)\n"
 		""},
 	 { (char *)"cc_decoder_sptr_history", _wrap_cc_decoder_sptr_history, METH_VARARGS, (char *)"cc_decoder_sptr_history(cc_decoder_sptr self) -> unsigned int"},
 	 { (char *)"cc_decoder_sptr_declare_sample_delay", _wrap_cc_decoder_sptr_declare_sample_delay, METH_VARARGS, (char *)"\n"

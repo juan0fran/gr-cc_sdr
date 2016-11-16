@@ -27,6 +27,7 @@
 /usr/local/share/doc/gr-cc_sdr/xml/cc__decoder_8h.xml
 /usr/local/share/doc/gr-cc_sdr/xml/dir_fcbdb5498d3457008eabad3094a828fa.xml
 /usr/local/share/doc/gr-cc_sdr/xml/group__block.xml
+/usr/local/share/doc/gr-cc_sdr/xml/rs__work_8h.xml
 /usr/local/share/doc/gr-cc_sdr/xml/dir_d44c64559bbebec7f509842c48db8b23.xml
 /usr/local/share/doc/gr-cc_sdr/xml/index.xsd
 /usr/local/share/doc/gr-cc_sdr/xml/classgr_1_1cc__sdr_1_1cc__decoder.xml
@@ -36,6 +37,7 @@
 /usr/local/share/doc/gr-cc_sdr/xml/indexpage.xml
 /usr/local/share/doc/gr-cc_sdr/xml/namespacestd.xml
 /usr/local/share/doc/gr-cc_sdr/xml/dir_97aefd0d527b934f1d99a682da8fe6a9.xml
+/usr/local/share/doc/gr-cc_sdr/html/rs__work_8h.js
 /usr/local/share/doc/gr-cc_sdr/html/jquery.js
 /usr/local/share/doc/gr-cc_sdr/html/classgr_1_1cc__sdr_1_1cc__decoder__impl-members.html
 /usr/local/share/doc/gr-cc_sdr/html/sync_off.png
@@ -44,6 +46,7 @@
 /usr/local/share/doc/gr-cc_sdr/html/classgr_1_1cc__sdr_1_1cc__decoder.png
 /usr/local/share/doc/gr-cc_sdr/html/nav_h.png
 /usr/local/share/doc/gr-cc_sdr/html/arrowdown.png
+/usr/local/share/doc/gr-cc_sdr/html/globals_type.html
 /usr/local/share/doc/gr-cc_sdr/html/namespacegr.html
 /usr/local/share/doc/gr-cc_sdr/html/api_8h.html
 /usr/local/share/doc/gr-cc_sdr/html/globals_defs.html
@@ -73,6 +76,7 @@
 /usr/local/share/doc/gr-cc_sdr/html/files.js
 /usr/local/share/doc/gr-cc_sdr/html/dir_d44c64559bbebec7f509842c48db8b23.html
 /usr/local/share/doc/gr-cc_sdr/html/namespacegr_1_1cc__sdr.html
+/usr/local/share/doc/gr-cc_sdr/html/rs__work_8h.html
 /usr/local/share/doc/gr-cc_sdr/html/tab_a.png
 /usr/local/share/doc/gr-cc_sdr/html/hierarchy.js
 /usr/local/share/doc/gr-cc_sdr/html/cc__decoder__impl_8h.html
@@ -95,6 +99,7 @@
 /usr/local/share/doc/gr-cc_sdr/html/group__defs_8dox.html
 /usr/local/share/doc/gr-cc_sdr/html/tabs.css
 /usr/local/share/doc/gr-cc_sdr/html/classgr_1_1cc__sdr_1_1cc__decoder.js
+/usr/local/share/doc/gr-cc_sdr/html/rs__work_8h_source.html
 /usr/local/share/doc/gr-cc_sdr/html/cc__decoder_8h.html
 /usr/local/share/doc/gr-cc_sdr/html/nav_g.png
 /usr/local/share/doc/gr-cc_sdr/html/cc__decoder__impl_8h_source.html

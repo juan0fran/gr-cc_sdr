@@ -31,6 +31,19 @@
         </inbodydescription>
         <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="33" column="1" bodyfile="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" bodystart="33" bodyend="-1"/>
       </memberdef>
+      <memberdef kind="variable" id="classgr_1_1cc__sdr_1_1cc__decoder__impl_1aef5a23be3aaa895ab860aae4a2f4c244" prot="private" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool gr::cc_sdr::cc_decoder_impl::d_has_white</definition>
+        <argsstring></argsstring>
+        <name>d_has_white</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="34" column="1" bodyfile="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" bodystart="34" bodyend="-1"/>
+      </memberdef>
       <memberdef kind="variable" id="classgr_1_1cc__sdr_1_1cc__decoder__impl_1a7b962ab97b7264e402e5e9385217e8b6" prot="private" static="no" mutable="no">
         <type>int</type>
         <definition>int gr::cc_sdr::cc_decoder_impl::d_plen</definition>
@@ -42,7 +55,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="34" column="1" bodyfile="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" bodystart="34" bodyend="-1"/>
+        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="36" column="1" bodyfile="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" bodystart="36" bodyend="-1"/>
       </memberdef>
       <memberdef kind="variable" id="classgr_1_1cc__sdr_1_1cc__decoder__impl_1a7d0c34ac0cfe31e7d0e7c6dd912f4cc7" prot="private" static="no" mutable="no">
         <type>int</type>
@@ -55,14 +68,53 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="35" column="1" bodyfile="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" bodystart="35" bodyend="-1"/>
+        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="37" column="1" bodyfile="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classgr_1_1cc__sdr_1_1cc__decoder__impl_1a1d115258b03ad32797d11e6cb7246b43" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int gr::cc_sdr::cc_decoder_impl::d_uncoded_len</definition>
+        <argsstring></argsstring>
+        <name>d_uncoded_len</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="38" column="1" bodyfile="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classgr_1_1cc__sdr_1_1cc__decoder__impl_1a92161b794b90eebc70226e09db629563" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int gr::cc_sdr::cc_decoder_impl::d_coded_len</definition>
+        <argsstring></argsstring>
+        <name>d_coded_len</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="39" column="1" bodyfile="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="classgr_1_1cc__sdr_1_1cc__decoder__impl_1ae6a288e5247ed75f839b621c07191b05" prot="private" static="no" mutable="no">
+        <type>int</type>
+        <definition>int gr::cc_sdr::cc_decoder_impl::d_correct</definition>
+        <argsstring></argsstring>
+        <name>d_correct</name>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="41" column="1" bodyfile="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" bodystart="41" bodyend="-1"/>
       </memberdef>
       </sectiondef>
       <sectiondef kind="public-func">
-      <memberdef kind="function" id="classgr_1_1cc__sdr_1_1cc__decoder__impl_1aeefcbb8587aa147fb5e5a96ba90bed5c" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+      <memberdef kind="function" id="classgr_1_1cc__sdr_1_1cc__decoder__impl_1a06eb32db04922cce391dddede99eaa42" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
         <definition>gr::cc_sdr::cc_decoder_impl::cc_decoder_impl</definition>
-        <argsstring>(bool has_fec, bool has_rs, int plen)</argsstring>
+        <argsstring>(bool has_fec, bool has_rs, bool has_white, int plen)</argsstring>
         <name>cc_decoder_impl</name>
         <param>
           <type>bool</type>
@@ -71,6 +123,10 @@
         <param>
           <type>bool</type>
           <declname>has_rs</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>has_white</declname>
         </param>
         <param>
           <type>int</type>
@@ -82,7 +138,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="39" column="1"/>
+        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="45" column="1"/>
       </memberdef>
       <memberdef kind="function" id="classgr_1_1cc__sdr_1_1cc__decoder__impl_1ae5d66d1ccf754779494bd5a549b62619" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type></type>
@@ -95,7 +151,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="40" column="1"/>
+        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="46" column="1"/>
       </memberdef>
       <memberdef kind="function" id="classgr_1_1cc__sdr_1_1cc__decoder__impl_1ad1a84cf8a991b7f49f42b93957f65e10" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -116,7 +172,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="43" column="1"/>
+        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="49" column="1"/>
       </memberdef>
       <memberdef kind="function" id="classgr_1_1cc__sdr_1_1cc__decoder__impl_1afe1a1efc4ad1e5996cfe8b122940bbf1" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>int</type>
@@ -145,7 +201,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="45" column="1"/>
+        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="51" column="1"/>
       </memberdef>
       <memberdef kind="function" id="classgr_1_1cc__sdr_1_1cc__decoder__impl_1a50bfb89078530d8601c7f682695ad317" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
         <type>void</type>
@@ -162,7 +218,7 @@
         </detaileddescription>
         <inbodydescription>
         </inbodydescription>
-        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="50" column="1"/>
+        <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="56" column="1"/>
       </memberdef>
       </sectiondef>
     <briefdescription>
@@ -203,16 +259,20 @@
         </childnode>
       </node>
     </collaborationgraph>
-    <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="30" column="1" bodyfile="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" bodystart="29" bodyend="52"/>
+    <location file="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" line="30" column="1" bodyfile="/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/lib/cc_decoder_impl.h" bodystart="29" bodyend="58"/>
     <listofallmembers>
-      <member refid="classgr_1_1cc__sdr_1_1cc__decoder__impl_1aeefcbb8587aa147fb5e5a96ba90bed5c" prot="public" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>cc_decoder_impl</name></member>
+      <member refid="classgr_1_1cc__sdr_1_1cc__decoder__impl_1a06eb32db04922cce391dddede99eaa42" prot="public" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>cc_decoder_impl</name></member>
+      <member refid="classgr_1_1cc__sdr_1_1cc__decoder__impl_1a92161b794b90eebc70226e09db629563" prot="private" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>d_coded_len</name></member>
+      <member refid="classgr_1_1cc__sdr_1_1cc__decoder__impl_1ae6a288e5247ed75f839b621c07191b05" prot="private" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>d_correct</name></member>
       <member refid="classgr_1_1cc__sdr_1_1cc__decoder__impl_1a43dd8b91f17a87283bab32827e3713a8" prot="private" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>d_has_fec</name></member>
       <member refid="classgr_1_1cc__sdr_1_1cc__decoder__impl_1a1fde9a3cccddccd837911ef2b2cfd25b" prot="private" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>d_has_rs</name></member>
+      <member refid="classgr_1_1cc__sdr_1_1cc__decoder__impl_1aef5a23be3aaa895ab860aae4a2f4c244" prot="private" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>d_has_white</name></member>
       <member refid="classgr_1_1cc__sdr_1_1cc__decoder__impl_1a7b962ab97b7264e402e5e9385217e8b6" prot="private" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>d_plen</name></member>
       <member refid="classgr_1_1cc__sdr_1_1cc__decoder__impl_1a7d0c34ac0cfe31e7d0e7c6dd912f4cc7" prot="private" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>d_reclen</name></member>
+      <member refid="classgr_1_1cc__sdr_1_1cc__decoder__impl_1a1d115258b03ad32797d11e6cb7246b43" prot="private" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>d_uncoded_len</name></member>
       <member refid="classgr_1_1cc__sdr_1_1cc__decoder__impl_1ad1a84cf8a991b7f49f42b93957f65e10" prot="public" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>forecast</name></member>
       <member refid="classgr_1_1cc__sdr_1_1cc__decoder__impl_1afe1a1efc4ad1e5996cfe8b122940bbf1" prot="public" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>general_work</name></member>
-      <member refid="classgr_1_1cc__sdr_1_1cc__decoder_1abc38d776ee84b1d8aa76d151f6b7700e" prot="public" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>make</name></member>
+      <member refid="classgr_1_1cc__sdr_1_1cc__decoder_1a78071f054bb70155a0d334b942066608" prot="public" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>make</name></member>
       <member refid="classgr_1_1cc__sdr_1_1cc__decoder__impl_1a50bfb89078530d8601c7f682695ad317" prot="public" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>msg_handler</name></member>
       <member refid="classgr_1_1cc__sdr_1_1cc__decoder_1a065ec7b71e20dc8f76b7b523f0a33447" prot="public" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>sptr</name></member>
       <member refid="classgr_1_1cc__sdr_1_1cc__decoder__impl_1ae5d66d1ccf754779494bd5a549b62619" prot="public" virt="non-virtual"><scope>gr::cc_sdr::cc_decoder_impl</scope><name>~cc_decoder_impl</name></member>
