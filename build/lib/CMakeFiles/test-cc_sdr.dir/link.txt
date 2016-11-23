@@ -1,1 +1,0 @@
-/usr/bin/c++   -O3 -DNDEBUG   CMakeFiles/test-cc_sdr.dir/test_cc_sdr.cc.o CMakeFiles/test-cc_sdr.dir/qa_cc_sdr.cc.o  -o test-cc_sdr -rdynamic -lgnuradio-runtime -lgnuradio-pmt -lboost_filesystem -lboost_system -lcppunit -ldl libgnuradio-cc_sdr.so -lgnuradio-runtime -lgnuradio-pmt -lboost_filesystem -lboost_system -Wl,-rpath,/home/cubecat/Escritorio/GNURadio/gr-cc_sdr/build/lib 
