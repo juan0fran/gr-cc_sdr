@@ -240,7 +240,7 @@ namespace gr {
             std::cout << "Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;            
             message_port_pub(pmt::mp("out"),
               pmt::cons(pmt::PMT_NIL,
-              pmt::init_u8vector(rxPacket[0], rxPacket)));
+              pmt::init_u8vector((rxPacket[0]+1), rxPacket)));
           }else{
               /* decode rs */
               if (decode_rs_message(rxPacket, d_coded_len, uncodedPacket, d_uncoded_len) == d_uncoded_len){
@@ -250,7 +250,7 @@ namespace gr {
                 std::cout << "Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;
                 message_port_pub(pmt::mp("out"),
                     pmt::cons(pmt::PMT_NIL,
-                    pmt::init_u8vector(uncodedPacket[0], uncodedPacket)));
+                    pmt::init_u8vector((uncodedPacket[0]+1), uncodedPacket)));
               }else{
                 d_incorrect += 1;
                 std::cout << "Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;
@@ -275,7 +275,7 @@ namespace gr {
             std::cout << "Ok decoded: " << d_correct << " Timer: " << time(NULL) << std::endl;
             message_port_pub(pmt::mp("out"),
               pmt::cons(pmt::PMT_NIL,
-              pmt::init_u8vector(rxPacket[0], rxPacket)));
+              pmt::init_u8vector((rxPacket[0]+1), rxPacket)));
           }
         }
       }else{
@@ -300,7 +300,7 @@ namespace gr {
           std::cout << "Ok decoded: " << d_correct << " Timer: " << time(NULL) << std::endl;
           message_port_pub(pmt::mp("out"),
             pmt::cons(pmt::PMT_NIL,
-            pmt::init_u8vector(rxPacket[0], rxPacket)));
+            pmt::init_u8vector((rxPacket[0]+1), rxPacket)));
         }
       }
     }
