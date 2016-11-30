@@ -9,8 +9,11 @@
 
 %{
 #include "cc_sdr/cc_decoder.h"
+#include "cc_sdr/cc_encoder.h"
 %}
 
 
 %include "cc_sdr/cc_decoder.h"
 GR_SWIG_BLOCK_MAGIC2(cc_sdr, cc_decoder);
+%include "cc_sdr/cc_encoder.h"
+GR_SWIG_BLOCK_MAGIC2(cc_sdr, cc_encoder);

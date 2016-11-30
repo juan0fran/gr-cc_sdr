@@ -31,7 +31,8 @@ endif()
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
-    fixedlen_packet_synchronizer.py DESTINATION ${GR_PYTHON_DIR}/cc_sdr
+    fixedlen_packet_synchronizer.py
+    fixedlen_packet_syncword_preamble.py DESTINATION ${GR_PYTHON_DIR}/cc_sdr
 )
 
 ########################################################################
@@ -43,3 +44,5 @@ set(GR_TEST_TARGET_DEPS gnuradio-cc_sdr)
 set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
 GR_ADD_TEST(qa_cc_decoder ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_cc_decoder.py)
 GR_ADD_TEST(qa_fixedlen_packet_synchronizer ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_fixedlen_packet_synchronizer.py)
+GR_ADD_TEST(qa_cc_encoder ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_cc_encoder.py)
+GR_ADD_TEST(qa_fixedlen_packet_syncword_preamble ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_fixedlen_packet_syncword_preamble.py)

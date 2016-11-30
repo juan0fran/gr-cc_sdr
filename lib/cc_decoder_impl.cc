@@ -31,7 +31,7 @@
 
 extern "C" {
   #include "rs_work.h"
-  #include "trellis_decoder.h"
+  #include "convolutional_coder.h"
 }
 
 #undef DEBUG
@@ -116,7 +116,7 @@ namespace gr {
         d_plen = plen + 2; /* packet + crc */
       }else{
         if (has_rs == true){
-          d_plen = plen*2 + 8; /* packet*2 + trellis header*2 */
+          d_plen = plen*2 + 8; /* packet*2 + crc*2 + trellis header*2 */
           d_coded_len = plen;
           d_uncoded_len = d_coded_len - 32;
         }else{

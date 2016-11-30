@@ -27,8 +27,9 @@ link_directories(${Boost_LIBRARY_DIRS})
 
 list(APPEND cc_sdr_sources
     cc_decoder_impl.cc
-    trellis_decoder.c
+    convolutional_coder.c
     rs_work.c
+    cc_encoder_impl.cc
 )
 
 set(cc_sdr_sources "${cc_sdr_sources}" PARENT_SCOPE)

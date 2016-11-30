@@ -1,5 +1,5 @@
 <block>
-  <name>Cc decoder</name>
+  <name>CC decoder</name>
   <key>cc_sdr_cc_decoder</key>
   <category>CC_SDR</category>
   <import>import cc_sdr</import>

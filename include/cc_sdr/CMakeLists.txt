@@ -22,5 +22,6 @@
 ########################################################################
 install(FILES
     api.h
-    cc_decoder.h DESTINATION include/cc_sdr
+    cc_decoder.h
+    cc_encoder.h DESTINATION include/cc_sdr
 )

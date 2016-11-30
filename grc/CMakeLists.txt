@@ -19,5 +19,7 @@
 
 install(FILES
     cc_sdr_cc_decoder.xml
-    cc_sdr_fixedlen_packet_synchronizer.xml DESTINATION share/gnuradio/grc/blocks
+    cc_sdr_fixedlen_packet_synchronizer.xml
+    cc_sdr_cc_encoder.xml
+    cc_sdr_fixedlen_packet_syncword_preamble.xml DESTINATION share/gnuradio/grc/blocks
 )

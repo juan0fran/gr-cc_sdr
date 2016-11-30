@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <block>
-  <name>Fixed Length Stream Synchronizer Tagger</name>
+  <name>FSL: Synchronizer Tagger (RX)</name>
   <key>cc_sdr_fixedlen_packet_synchronizer</key>
-  <category>cc_sdr</category>
+  <category>CC_SDR</category>
   <import>import cc_sdr</import>
   <import>import numpy</import>
   <make>cc_sdr.fixedlen_packet_synchronizer($synctag, $plentag, $plen, $stream_type.t)</make>

@@ -32,4 +32,5 @@ except ImportError:
 
 # import any pure python here
 from fixedlen_packet_synchronizer import fixedlen_packet_synchronizer
+from fixedlen_packet_syncword_preamble import fixedlen_packet_syncword_preamble
 #
