@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<block>
+  <name>FLS: Preamble and Syncword Tagger (TX)</name>
+  <key>cc_sdr_fixedlen_packet_syncword_preamble</key>
+  <category>CC_SDR</category>
+  <import>import cc_sdr</import>
+  <import>import numpy</import>
+  <make>cc_sdr.fixedlen_packet_syncword_preamble($plentag, $plen, $preamble_bytes, $access_code, $stream_type.t)</make>
+<param>
+    <name>Stream Type</name>
+    <key>stream_type</key>
+    <type>enum</type>
+    <option>
+      <name>Byte</name>
+      <key>byte</key>
+      <opt>t:numpy.byte</opt>
+    </option>
+    <option>
+      <name>Complex</name>
+      <key>complex</key>
+      <opt>t:numpy.complex</opt>
+    </option>
+    <option>
+      <name>Float</name>
+      <key>float</key>
+      <opt>t:numpy.float</opt>
+    </option>
+    <option>
+      <name>Int</name>
+      <key>int</key>
+      <opt>t:numpy.int</opt>
+    </option>
+    <option>
+      <name>Short</name>
+      <key>short</key>
+      <opt>t:numpy.short</opt>
+    </option>
+  </param>
+  <param>
+    <name>Access Code</name>
+    <key>access_code</key>
+    <value>"11010011100100011101001110010001"</value>
+    <type>string</type>
+  </param>
+  <param>
+    <name>Packet length tag</name>
+    <key>plentag</key>
+    <value>packet_len</value>
+    <type>string</type>
+  </param>
+  <param>
+    <name>Preamble Bytes</name>
+    <key>preamble_bytes</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Packet Length</name>
+    <key>plen</key>
+    <type>int</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>$stream_type</type>
+  </sink>
+
+  <source>
+    <name>out</name>
+    <type>$stream_type</type>
+  </source>
+</block>
