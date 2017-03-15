@@ -45,7 +45,7 @@ class fixedlen_packet_syncword_preamble(gr.basic_block):
         self.written = 0
         self.preamble = []
         for i in range(preamble_bytes):
-            self.preamble += "01010101"
+            self.preamble += "10101010"
 
     def general_work(self, input_items, output_items):
         inp = input_items[0]
@@ -61,13 +61,13 @@ class fixedlen_packet_syncword_preamble(gr.basic_block):
         for tag in self.tags:
             if (tag >= self.nitems_read(0) - len(self.stream)) and (tag < self.nitems_read(0) + len(inp) - self.packet_len + 1):
                 self.tags.remove(tag)
-                start = tag - self.nitems_read(0) + len(self.stream)
+                start = tag - self.nitems_read(0) + len(self.stream)           
                 packet = window[start : start + self.packet_len]
                 self.data += list(self.preamble)
                 self.data += list(self.access_code)
                 self.data += packet
+                self.written += self.packet_len
                 self.add_item_tag(0, self.written, self.packetlen_tag, pmt.from_long(self.packet_len))
-                self.written += len(self.data)
 
         self.stream.extend(inp.tolist())
 

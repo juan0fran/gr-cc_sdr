@@ -113,7 +113,13 @@ namespace gr {
       d_has_fec = has_fec;
       d_has_rs = has_rs;
       if (has_fec == false){
-        d_plen = plen + 2; /* packet + crc */
+        if (has_rs == true){
+          d_plen = plen;
+          d_coded_len = plen;
+          d_uncoded_len = plen - 32;
+        }else{
+          d_plen = plen + 2; /* packet + crc */
+        }
       }else{
         if (has_rs == true){
           d_plen = plen*2 + 8; /* packet*2 + crc*2 + trellis header*2 */
@@ -283,24 +289,40 @@ namespace gr {
         if (d_has_white == true){
           xor_pn9(data, d_plen);
         } 
-        memcpy(rxPacket, data, d_reclen+2);
-        /* Perform checksum */
-        checksum = 0xFFFF;
-        // Init value for CRC calculation
-        /* Go from d_reclen+2, which is the received length plus the CRC */
-        for (int i = 0; i < (d_reclen + 2); i++){
-            checksum = calcCRC(rxPacket[i], checksum);
-        }
-        /* if the previous calculous is 0, then CRC ok */
-        if (!checksum){
-          #ifdef DEBUG
-          std::cout << "CRC OK" << std::endl;
-          #endif
-          d_correct += 1;
-          std::cout << "Ok decoded: " << d_correct << " Timer: " << time(NULL) << std::endl;
-          message_port_pub(pmt::mp("out"),
-            pmt::cons(pmt::PMT_NIL,
-            pmt::init_u8vector((rxPacket[0]+1), rxPacket)));
+        if (d_has_rs){
+          memcpy(rxPacket, data, d_reclen);
+          if (decode_rs_message(rxPacket, d_coded_len, uncodedPacket, d_uncoded_len) == d_uncoded_len){
+            /* if decode true */
+            d_correct += 1;
+            d_correct_with_rs += 1;
+            std::cout << "Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;
+            message_port_pub(pmt::mp("out"),
+                pmt::cons(pmt::PMT_NIL,
+                pmt::init_u8vector((uncodedPacket[0]), uncodedPacket+1)));
+          }else{
+            d_incorrect += 1;
+            std::cout << "Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;
+          }          
+        }else{
+          memcpy(rxPacket, data, d_reclen+2);
+          /* Perform checksum */
+          checksum = 0xFFFF;
+          // Init value for CRC calculation
+          /* Go from d_reclen+2, which is the received length plus the CRC */
+          for (int i = 0; i < (d_reclen + 2); i++){
+              checksum = calcCRC(rxPacket[i], checksum);
+          }
+          /* if the previous calculous is 0, then CRC ok */
+          if (!checksum){
+            #ifdef DEBUG
+            std::cout << "CRC OK" << std::endl;
+            #endif
+            d_correct += 1;
+            std::cout << "Ok decoded: " << d_correct << " Timer: " << time(NULL) << std::endl;
+            message_port_pub(pmt::mp("out"),
+              pmt::cons(pmt::PMT_NIL,
+              pmt::init_u8vector((rxPacket[0]+1), rxPacket)));
+          }
         }
       }
     }

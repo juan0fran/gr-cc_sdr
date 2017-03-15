@@ -5,7 +5,7 @@
 # Title: CC1101 decoder
 # Author: Juan Fran Muñoz
 # Description: CC1101 decoder
-# Generated: Sat Dec  3 11:41:12 2016
+# Generated: Tue Mar 14 15:19:58 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -17,10 +17,6 @@ if __name__ == '__main__':
             x11.XInitThreads()
         except:
             print "Warning: failed to XInitThreads()"
-
-import os
-import sys
-sys.path.append(os.environ.get('GRC_HIER_PATH', os.path.expanduser('~/.grc_gnuradio')))
 
 from PyQt4 import Qt
 from gnuradio import analog
@@ -34,19 +30,18 @@ from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
 from gnuradio.qtgui import Range, RangeWidget
 from optparse import OptionParser
-from p_meter import p_meter  # grc-generated hier_block
 import cc_sdr
 import math
 import numpy
 import osmosdr
 import sip
-import sql_writer
+import sys
 import time
 
 
 class rtl_cc1101(gr.top_block, Qt.QWidget):
 
-    def __init__(self, filter_width=96e3, freq=430e6, ip="localhost", offset=50e3, port=7355, rate=9600, rf_gain=65):
+    def __init__(self, filter_width=96e3, freq=433.92e6, ip="localhost", offset=50e3, port=7355, rate=9600, rf_gain=65):
         gr.top_block.__init__(self, "CC1101 decoder")
         Qt.QWidget.__init__(self)
         self.setWindowTitle("CC1101 decoder")
@@ -92,7 +87,7 @@ class rtl_cc1101(gr.top_block, Qt.QWidget):
         self.mu_var = mu_var = 0.175
         self.freq_shift = freq_shift = 0
         self.freq_comp_rate = freq_comp_rate = 96e3
-        self.fec = fec = 1
+        self.fec = fec = 0
         self.access_code = access_code = "11010011100100011101001110010001"
 
         ##################################################
@@ -107,7 +102,6 @@ class rtl_cc1101(gr.top_block, Qt.QWidget):
         self._freq_shift_range = Range(-200e3, 200e3, 500, 0, 200)
         self._freq_shift_win = RangeWidget(self._freq_shift_range, self.set_freq_shift, "Frequency Shift", "counter_slider", float)
         self.top_layout.addWidget(self._freq_shift_win)
-        self.sql_writer_sql_beacon_parser_0 = sql_writer.sql_beacon_parser("root", "root", "nslsbp", "hk_data", "localhost", 0)
         self.rtlsdr_source_0 = osmosdr.source( args="numchan=" + str(1) + " " + "" )
         self.rtlsdr_source_0.set_sample_rate(source_rate)
         self.rtlsdr_source_0.set_center_freq(freq-offset, 0)
@@ -116,7 +110,7 @@ class rtl_cc1101(gr.top_block, Qt.QWidget):
         self.rtlsdr_source_0.set_iq_balance_mode(0, 0)
         self.rtlsdr_source_0.set_gain_mode(False, 0)
         self.rtlsdr_source_0.set_gain(40, 0)
-        self.rtlsdr_source_0.set_if_gain(20, 0)
+        self.rtlsdr_source_0.set_if_gain(30, 0)
         self.rtlsdr_source_0.set_bb_gain(20, 0)
         self.rtlsdr_source_0.set_antenna("", 0)
         self.rtlsdr_source_0.set_bandwidth(0, 0)
@@ -150,7 +144,7 @@ class rtl_cc1101(gr.top_block, Qt.QWidget):
         	1024, #fftsize
         	firdes.WIN_BLACKMAN_hARRIS, #wintype
         	0, #fc
-        	source_rate, #bw
+        	samp_rate*2, #bw
         	"", #name
         	True, #plotfreq
         	True, #plotwaterfall
@@ -165,60 +159,65 @@ class rtl_cc1101(gr.top_block, Qt.QWidget):
         
         
           
-        self.qtgui_number_sink_0_0 = qtgui.number_sink(
+        self.qtgui_number_sink_0 = qtgui.number_sink(
             gr.sizeof_float,
-            0.95,
+            0,
             qtgui.NUM_GRAPH_HORIZ,
             1
         )
-        self.qtgui_number_sink_0_0.set_update_time(0.1)
-        self.qtgui_number_sink_0_0.set_title("Floor Power")
+        self.qtgui_number_sink_0.set_update_time(0.10)
+        self.qtgui_number_sink_0.set_title("")
         
-        labels = ["Raw", "pDiff", "Raw", "", "",
+        labels = ["Signal Strength", "", "", "", "",
                   "", "", "", "", ""]
-        units = ["dB", "dB", "dB", "", "",
+        units = ["dB", "", "", "", "",
                  "", "", "", "", ""]
-        colors = [("blue", "red"), ("black", "red"), ("black", "red"), ("black", "black"), ("black", "black"),
+        colors = [("black", "red"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"),
                   ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black")]
         factor = [1, 1, 1, 1, 1,
                   1, 1, 1, 1, 1]
         for i in xrange(1):
-            self.qtgui_number_sink_0_0.set_min(i, -174+30)
-            self.qtgui_number_sink_0_0.set_max(i, -20)
-            self.qtgui_number_sink_0_0.set_color(i, colors[i][0], colors[i][1])
+            self.qtgui_number_sink_0.set_min(i, -110)
+            self.qtgui_number_sink_0.set_max(i, -10)
+            self.qtgui_number_sink_0.set_color(i, colors[i][0], colors[i][1])
             if len(labels[i]) == 0:
-                self.qtgui_number_sink_0_0.set_label(i, "Data {0}".format(i))
+                self.qtgui_number_sink_0.set_label(i, "Data {0}".format(i))
             else:
-                self.qtgui_number_sink_0_0.set_label(i, labels[i])
-            self.qtgui_number_sink_0_0.set_unit(i, units[i])
-            self.qtgui_number_sink_0_0.set_factor(i, factor[i])
+                self.qtgui_number_sink_0.set_label(i, labels[i])
+            self.qtgui_number_sink_0.set_unit(i, units[i])
+            self.qtgui_number_sink_0.set_factor(i, factor[i])
         
-        self.qtgui_number_sink_0_0.enable_autoscale(False)
-        self._qtgui_number_sink_0_0_win = sip.wrapinstance(self.qtgui_number_sink_0_0.pyqwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_number_sink_0_0_win)
-        self.p_meter_0_0 = p_meter(
-            samp_rate=samp_rate,
-        )
+        self.qtgui_number_sink_0.enable_autoscale(False)
+        self._qtgui_number_sink_0_win = sip.wrapinstance(self.qtgui_number_sink_0.pyqwidget(), Qt.QWidget)
+        self.top_layout.addWidget(self._qtgui_number_sink_0_win)
         self.freq_xlating_fir_filter_xxx_1 = filter.freq_xlating_fir_filter_ccc(int(freq_comp_rate/samp_rate), (firdes.low_pass(1, freq_comp_rate, rate, rate/20.0)), 0, freq_comp_rate)
-        self.freq_xlating_fir_filter_xxx_0_0 = filter.freq_xlating_fir_filter_ccc(1, (1, ), offset + freq_shift, source_rate)
         self.freq_xlating_fir_filter_xxx_0 = filter.freq_xlating_fir_filter_ccc(1, (firdes.low_pass(1, source_rate, filter_width/2.0, filter_width/20.0)), offset + freq_shift, source_rate)
         self.digital_fll_band_edge_cc_0 = digital.fll_band_edge_cc(freq_comp_rate / rate, 0.35, 25, 0.01)
         self.digital_correlate_access_code_tag_bb_0_0 = digital.correlate_access_code_tag_bb(access_code, threshold, "syncword")
         self.digital_clock_recovery_mm_xx_0 = digital.clock_recovery_mm_ff(sps*(1+0.0), var_om*mu_var*mu_var, 0.5, mu_var, 0.005)
         self.digital_binary_slicer_fb_0 = digital.binary_slicer_fb()
-        self.cc_sdr_fixedlen_packet_synchronizer_0 = cc_sdr.fixedlen_packet_synchronizer("syncword", "packet_len", (packet_length + (1-fec)*2 +  fec*(packet_length + 8)) * 8, numpy.byte)
-        self.cc_sdr_cc_decoder_0 = cc_sdr.cc_decoder(True, True, True, packet_length)
+        self.cc_sdr_fixedlen_packet_synchronizer_0 = cc_sdr.fixedlen_packet_synchronizer("syncword", "packet_len", (packet_length +  fec*(packet_length + 8)) * 8, numpy.byte)
+        self.cc_sdr_cc_decoder_0 = cc_sdr.cc_decoder(False, True, True, packet_length)
         self.blocks_unpacked_to_packed_xx_0_0 = blocks.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST)
         self.blocks_tagged_stream_to_pdu_0_0 = blocks.tagged_stream_to_pdu(blocks.byte_t, "packet_len")
         self.blocks_tagged_stream_multiply_length_0_0 = blocks.tagged_stream_multiply_length(gr.sizeof_char*1, "packet_len", 1/8.0)
+        self.blocks_socket_pdu_0 = blocks.socket_pdu("TCP_SERVER", "", "52002", 10000, False)
+        self.blocks_nlog10_ff_0 = blocks.nlog10_ff(10, 1, 0)
+        self.blocks_multiply_conjugate_cc_0 = blocks.multiply_conjugate_cc(1)
+        self.blocks_moving_average_xx_0 = blocks.moving_average_ff(48000/10, 10.0/48000.0, 10000)
+        self.blocks_complex_to_real_0 = blocks.complex_to_real(1)
         self.analog_quadrature_demod_cf_0 = analog.quadrature_demod_cf(sps/(math.pi/2))
 
         ##################################################
         # Connections
         ##################################################
         self.msg_connect((self.blocks_tagged_stream_to_pdu_0_0, 'pdus'), (self.cc_sdr_cc_decoder_0, 'in'))    
-        self.msg_connect((self.cc_sdr_cc_decoder_0, 'out'), (self.sql_writer_sql_beacon_parser_0, 'in'))    
+        self.msg_connect((self.cc_sdr_cc_decoder_0, 'out'), (self.blocks_socket_pdu_0, 'pdus'))    
         self.connect((self.analog_quadrature_demod_cf_0, 0), (self.digital_clock_recovery_mm_xx_0, 0))    
+        self.connect((self.blocks_complex_to_real_0, 0), (self.blocks_moving_average_xx_0, 0))    
+        self.connect((self.blocks_moving_average_xx_0, 0), (self.blocks_nlog10_ff_0, 0))    
+        self.connect((self.blocks_multiply_conjugate_cc_0, 0), (self.blocks_complex_to_real_0, 0))    
+        self.connect((self.blocks_nlog10_ff_0, 0), (self.qtgui_number_sink_0, 0))    
         self.connect((self.blocks_tagged_stream_multiply_length_0_0, 0), (self.blocks_tagged_stream_to_pdu_0_0, 0))    
         self.connect((self.blocks_unpacked_to_packed_xx_0_0, 0), (self.blocks_tagged_stream_multiply_length_0_0, 0))    
         self.connect((self.cc_sdr_fixedlen_packet_synchronizer_0, 0), (self.blocks_unpacked_to_packed_xx_0_0, 0))    
@@ -227,14 +226,13 @@ class rtl_cc1101(gr.top_block, Qt.QWidget):
         self.connect((self.digital_correlate_access_code_tag_bb_0_0, 0), (self.cc_sdr_fixedlen_packet_synchronizer_0, 0))    
         self.connect((self.digital_fll_band_edge_cc_0, 0), (self.freq_xlating_fir_filter_xxx_1, 0))    
         self.connect((self.freq_xlating_fir_filter_xxx_0, 0), (self.rational_resampler_xxx_0, 0))    
-        self.connect((self.freq_xlating_fir_filter_xxx_0_0, 0), (self.qtgui_sink_x_0_0, 0))    
         self.connect((self.freq_xlating_fir_filter_xxx_1, 0), (self.analog_quadrature_demod_cf_0, 0))    
-        self.connect((self.freq_xlating_fir_filter_xxx_1, 0), (self.p_meter_0_0, 0))    
+        self.connect((self.freq_xlating_fir_filter_xxx_1, 0), (self.blocks_multiply_conjugate_cc_0, 0))    
+        self.connect((self.freq_xlating_fir_filter_xxx_1, 0), (self.blocks_multiply_conjugate_cc_0, 1))    
         self.connect((self.freq_xlating_fir_filter_xxx_1, 0), (self.qtgui_sink_x_0_0_0, 0))    
-        self.connect((self.p_meter_0_0, 0), (self.qtgui_number_sink_0_0, 0))    
         self.connect((self.rational_resampler_xxx_0, 0), (self.digital_fll_band_edge_cc_0, 0))    
+        self.connect((self.rational_resampler_xxx_0, 0), (self.qtgui_sink_x_0_0, 0))    
         self.connect((self.rtlsdr_source_0, 0), (self.freq_xlating_fir_filter_xxx_0, 0))    
-        self.connect((self.rtlsdr_source_0, 0), (self.freq_xlating_fir_filter_xxx_0_0, 0))    
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "rtl_cc1101")
@@ -267,9 +265,8 @@ class rtl_cc1101(gr.top_block, Qt.QWidget):
 
     def set_offset(self, offset):
         self.offset = offset
-        self.freq_xlating_fir_filter_xxx_0_0.set_center_freq(self.offset + self.freq_shift)
-        self.rtlsdr_source_0.set_center_freq(self.freq-self.offset, 0)
         self.freq_xlating_fir_filter_xxx_0.set_center_freq(self.offset + self.freq_shift)
+        self.rtlsdr_source_0.set_center_freq(self.freq-self.offset, 0)
 
     def get_port(self):
         return self.port
@@ -318,16 +315,15 @@ class rtl_cc1101(gr.top_block, Qt.QWidget):
 
     def set_source_rate(self, source_rate):
         self.source_rate = source_rate
-        self.qtgui_sink_x_0_0.set_frequency_range(0, self.source_rate)
-        self.rtlsdr_source_0.set_sample_rate(self.source_rate)
         self.freq_xlating_fir_filter_xxx_0.set_taps((firdes.low_pass(1, self.source_rate, self.filter_width/2.0, self.filter_width/20.0)))
+        self.rtlsdr_source_0.set_sample_rate(self.source_rate)
 
     def get_samp_rate(self):
         return self.samp_rate
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.p_meter_0_0.set_samp_rate(self.samp_rate)
+        self.qtgui_sink_x_0_0.set_frequency_range(0, self.samp_rate*2)
         self.qtgui_sink_x_0_0_0.set_frequency_range(0, self.samp_rate)
 
     def get_packet_length(self):
@@ -349,7 +345,6 @@ class rtl_cc1101(gr.top_block, Qt.QWidget):
 
     def set_freq_shift(self, freq_shift):
         self.freq_shift = freq_shift
-        self.freq_xlating_fir_filter_xxx_0_0.set_center_freq(self.offset + self.freq_shift)
         self.freq_xlating_fir_filter_xxx_0.set_center_freq(self.offset + self.freq_shift)
 
     def get_freq_comp_rate(self):
@@ -378,7 +373,7 @@ def argument_parser():
         "", "--filter-width", dest="filter_width", type="eng_float", default=eng_notation.num_to_str(96e3),
         help="Set FM filter width [default=%default]")
     parser.add_option(
-        "-f", "--freq", dest="freq", type="eng_float", default=eng_notation.num_to_str(430e6),
+        "-f", "--freq", dest="freq", type="eng_float", default=eng_notation.num_to_str(433.92e6),
         help="Set frequency [default=%default]")
     parser.add_option(
         "", "--ip", dest="ip", type="string", default="localhost",

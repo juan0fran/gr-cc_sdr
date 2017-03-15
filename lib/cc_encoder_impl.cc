@@ -105,6 +105,13 @@ namespace gr {
       d_has_rs = has_rs;
       if (has_fec == false){
         d_plen = plen + 2; /* packet + crc */
+	      d_uncoded_len = plen - 32;
+	      d_coded_len = plen;
+	      if (has_rs == true){
+          d_plen = plen; /* packet + crc */
+	        d_uncoded_len = plen - 32;
+	        d_coded_len = plen;  
+	      }	      
       }else{
         if (has_rs == true){
           d_plen = plen*2 + 8; /* packet*2 + crc*2 + trellis header*2 */
@@ -112,6 +119,8 @@ namespace gr {
           d_uncoded_len = d_coded_len - 32;
         }else{
           d_plen = plen*2 + 8; /* packet*2 + crc*2 + trellis header*2 */
+	        d_uncoded_len = plen;
+	        d_coded_len = plen;
         }
       }
       d_has_white = has_white;
@@ -153,7 +162,7 @@ namespace gr {
       unsigned int msg_size = pmt::length(msg);
       
       uint8_t data_in[d_uncoded_len];
-      uint8_t data_rs_out[d_coded_len + 2];
+      uint8_t data_rs_out[d_coded_len + 8 + 4];
       uint8_t data_out[d_plen];
             
       unsigned short checksum;
@@ -166,8 +175,57 @@ namespace gr {
       }
 
       /* paddind is automatic as data_in is initialised to 0 */
-      memset(data_in, 0, d_uncoded_len);
+      for (int i = 0; i < d_uncoded_len; i++)
+        data_in[i] = 0%0xFF;
+
       memcpy(data_in, pmt::uniform_vector_elements(msg, offset), msg_size);
+
+      if (d_has_fec == false && d_has_rs == true){
+        std::printf("Message size: %d\r\n", msg_size);
+        if ((msg_size - 1) != data_in[0]){
+          if (msg_size < (d_uncoded_len-1)){
+            for (int i = msg_size; i > 0; i--){
+              data_in[i] = data_in[i - 1];
+            }
+            data_in[0] = (uint8_t) msg_size;
+          }else{
+            std::printf("Error occured, first byte must indicate packet size\n");
+            return;
+          }
+        }
+        if (encode_rs_message(data_in, d_uncoded_len, data_rs_out, d_coded_len) != d_coded_len){
+          std::printf("Encode RS failed\n");
+          return;
+        }
+        /*
+        std::cout << "Send data (white):" << std::endl;
+        for(int i = 0; i < d_plen; i++)
+          std::printf ("%03d%s" , data_rs_out[i], (i % 16 == 15) ? "\n" : " ");
+        std::cout << std::endl;  */ 
+        
+        if (d_has_white)
+          xor_pn9(data_rs_out, d_coded_len);     
+        
+        for (int i = d_plen; i >= 0; i--)
+          data_rs_out[i + 4 + 4] = data_rs_out[i];
+          
+        int idx = 0;
+        
+        data_rs_out[idx++] = 0xAA;
+        data_rs_out[idx++] = 0xAA;
+        data_rs_out[idx++] = 0xAA;
+        data_rs_out[idx++] = 0xAA;
+          
+        data_rs_out[idx++] = 0xD3;
+        data_rs_out[idx++] = 0x91;
+        data_rs_out[idx++] = 0xD3;
+        data_rs_out[idx++] = 0x91;
+        
+          message_port_pub(pmt::mp("out"),
+        pmt::cons(pmt::PMT_NIL,
+        pmt::init_u8vector(d_coded_len + 4 + 4, data_rs_out)));
+        return;
+      }
 
       /* a message is composed by 1B length + (up to) 222B payload, if less, padded */
       if ((msg_size - 1) != data_in[0]){
@@ -191,19 +249,27 @@ namespace gr {
       for (int i = 0; i < d_coded_len; i++){
           checksum = calcCRC(data_rs_out[i], checksum);
       }
+      std::cout << "Send data:" << std::endl;
+      for(int i = 0; i < d_plen; i++)
+        std::printf ("0x%02X%s" , data_rs_out[i], (i % 16 == 15) ? "\n" : " ");
+      std::cout << std::endl;
       data_rs_out[d_coded_len] = checksum >> 8;
       data_rs_out[d_coded_len + 1] = checksum & 0x00FF;
       /* Now we have at data_rs_out a RS encoded 255,223 message plus 2 bytes of CRC */
       /* all this data must be XOR with PN9 sequence. this will turn the data more random... */
-      xor_pn9(data_rs_out, d_coded_len + 2);
+      if (d_has_white)
+        xor_pn9(data_rs_out, d_coded_len + 2);
       /* Finally a FEC with viterbi at r=1/2 is performed */
-      if (fecEncode(data_rs_out, data_out, d_coded_len + 2) != d_plen){
-        std::printf("Sizes of RS or FEC are not consistent\n");
-        return;
+      if (d_has_fec){
+        if (fecEncode(data_rs_out, data_out, d_coded_len + 2) != d_plen){
+          std::printf("Sizes of RS or FEC are not consistent\n");
+          return;
+        }
       }
+      
       message_port_pub(pmt::mp("out"),
             pmt::cons(pmt::PMT_NIL,
-            pmt::init_u8vector(d_plen, data_out)));
+            pmt::init_u8vector(d_plen, data_rs_out)));
     }
   } /* namespace cc_sdr */
 } /* namespace gr */
