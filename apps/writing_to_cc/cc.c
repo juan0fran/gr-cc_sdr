@@ -21,12 +21,8 @@ void * read_socket(void * args)
     printf("Read socket task\n");
     unsigned int cnt = 0;
     while(1){
-        if (read(fd, &c, 1) ){
-            if (c == '\n'){
-                printf(" Cnt: %d\n", cnt++);
-            }else{
-                printf("%c", c);  
-            }
+        if (read(fd, &c, 1) > 0){
+            printf("%02x ", c);
         }
     }
 }

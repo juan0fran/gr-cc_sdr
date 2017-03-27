@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Cc Packet
-# Generated: Wed Mar 15 09:21:56 2017
+# Generated: Mon Mar 27 17:05:24 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -17,7 +17,6 @@ if __name__ == '__main__':
             print "Warning: failed to XInitThreads()"
 
 from PyQt4 import Qt
-from gnuradio import analog
 from gnuradio import blocks
 from gnuradio import digital
 from gnuradio import eng_notation
@@ -92,7 +91,7 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self.uhd_usrp_source_0.set_samp_rate(source_rate)
         self.uhd_usrp_source_0.set_center_freq(433.92e6 - 50e3, 0)
         self.uhd_usrp_source_0.set_gain(65, 0)
-        self.uhd_usrp_source_0.set_antenna("RX2", 0)
+        self.uhd_usrp_source_0.set_antenna("TX/RX", 0)
         self.uhd_usrp_sink_0 = uhd.usrp_sink(
         	",".join(("", "")),
         	uhd.stream_args(
@@ -102,8 +101,8 @@ class cc_packet(gr.top_block, Qt.QWidget):
         	"packet_len",
         )
         self.uhd_usrp_sink_0.set_samp_rate(source_rate)
-        self.uhd_usrp_sink_0.set_center_freq(433.92e6 + 1e6, 0)
-        self.uhd_usrp_sink_0.set_gain(65, 0)
+        self.uhd_usrp_sink_0.set_center_freq(434.92*1e6, 0)
+        self.uhd_usrp_sink_0.set_gain(85, 0)
         self.uhd_usrp_sink_0.set_antenna("TX/RX", 0)
         self.rational_resampler_xxx_0_0 = filter.rational_resampler_ccc(
                 interpolation=int(freq_comp_rate),
@@ -136,10 +135,48 @@ class cc_packet(gr.top_block, Qt.QWidget):
         
         
           
+        self.qtgui_number_sink_0 = qtgui.number_sink(
+            gr.sizeof_float,
+            0,
+            qtgui.NUM_GRAPH_HORIZ,
+            2
+        )
+        self.qtgui_number_sink_0.set_update_time(0.10)
+        self.qtgui_number_sink_0.set_title("")
+        
+        labels = ["Received Power", "Normalized Power", "", "", "",
+                  "", "", "", "", ""]
+        units = ["dBm", "dBm/Hz", "", "", "",
+                 "", "", "", "", ""]
+        colors = [("blue", "red"), ("blue", "red"), ("black", "black"), ("black", "black"), ("black", "black"),
+                  ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black")]
+        factor = [1, 1, 1, 1, 1,
+                  1, 1, 1, 1, 1]
+        for i in xrange(2):
+            self.qtgui_number_sink_0.set_min(i, -174)
+            self.qtgui_number_sink_0.set_max(i, 10)
+            self.qtgui_number_sink_0.set_color(i, colors[i][0], colors[i][1])
+            if len(labels[i]) == 0:
+                self.qtgui_number_sink_0.set_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_number_sink_0.set_label(i, labels[i])
+            self.qtgui_number_sink_0.set_unit(i, units[i])
+            self.qtgui_number_sink_0.set_factor(i, factor[i])
+        
+        self.qtgui_number_sink_0.enable_autoscale(False)
+        self._qtgui_number_sink_0_win = sip.wrapinstance(self.qtgui_number_sink_0.pyqwidget(), Qt.QWidget)
+        self.top_layout.addWidget(self._qtgui_number_sink_0_win)
         self.low_pass_filter_0 = filter.fir_filter_ccf(1, firdes.low_pass(
-        	1, samp_rate, 9e3, 1e3, firdes.WIN_HAMMING, 6.76))
-        self.freq_xlating_fir_filter_xxx_1 = filter.freq_xlating_fir_filter_ccc(int(freq_comp_rate/samp_rate), (firdes.low_pass(1, freq_comp_rate, rate, rate/20.0)), 0, freq_comp_rate)
+        	1, samp_rate, rate * 1.0, 1e3, firdes.WIN_HAMMING, 6.76))
+        self.freq_xlating_fir_filter_xxx_1 = filter.freq_xlating_fir_filter_ccc(int(freq_comp_rate/samp_rate), (firdes.low_pass(1, freq_comp_rate, rate*0.625, rate/20.0)), 0, freq_comp_rate)
         self.freq_xlating_fir_filter_xxx_0 = filter.freq_xlating_fir_filter_ccc(1, (firdes.low_pass(1, source_rate, filter_width/2.0, filter_width/20.0)), 50e3, source_rate)
+        self.digital_gfsk_mod_1 = digital.gfsk_mod(
+        	samples_per_symbol=5,
+        	sensitivity=1.0,
+        	bt=0.5,
+        	verbose=False,
+        	log=False,
+        )
         self.digital_gfsk_demod_0 = digital.gfsk_demod(
         	samples_per_symbol=5,
         	sensitivity=0.5,
@@ -152,7 +189,6 @@ class cc_packet(gr.top_block, Qt.QWidget):
         )
         self.digital_fll_band_edge_cc_0 = digital.fll_band_edge_cc(freq_comp_rate / rate, 0.35, 25, 0.01)
         self.digital_correlate_access_code_tag_bb_0_0 = digital.correlate_access_code_tag_bb(access_code, threshold, "syncword")
-        self.digital_chunks_to_symbols_xx_0 = digital.chunks_to_symbols_bf((-1,1), 1)
         self.cc_sdr_fixedlen_packet_synchronizer_0 = cc_sdr.fixedlen_packet_synchronizer("syncword", "packet_len", (packet_length +  fec*(packet_length + 8)) * 8, numpy.byte)
         self.cc_sdr_cc_encoder_0 = cc_sdr.cc_encoder(False, True, True, 255)
         self.cc_sdr_cc_decoder_0 = cc_sdr.cc_decoder(False, True, True, packet_length)
@@ -160,15 +196,13 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self.blocks_tagged_stream_to_pdu_0_0 = blocks.tagged_stream_to_pdu(blocks.byte_t, "packet_len")
         self.blocks_tagged_stream_multiply_length_0_0 = blocks.tagged_stream_multiply_length(gr.sizeof_char*1, "packet_len", 1/8.0)
         self.blocks_tagged_stream_multiply_length_0 = blocks.tagged_stream_multiply_length(gr.sizeof_char*1, "packet_len", 8 * 5 * 10)
-        self.blocks_socket_pdu_0_0 = blocks.socket_pdu("TCP_SERVER", "", "52001", 10000, False)
+        self.blocks_socket_pdu_0_0 = blocks.socket_pdu("TCP_SERVER", "", "52001", 223, False)
         self.blocks_pdu_to_tagged_stream_0 = blocks.pdu_to_tagged_stream(blocks.byte_t, "packet_len")
-        self.blocks_packed_to_unpacked_xx_0 = blocks.packed_to_unpacked_bb(1, gr.GR_MSB_FIRST)
-        self.analog_nbfm_tx_0 = analog.nbfm_tx(
-        	audio_rate=9600,
-        	quad_rate=48000,
-        	tau=75e-6,
-        	max_dev=4800,
-                )
+        self.blocks_nlog10_ff_0_0 = blocks.nlog10_ff(10, 1, -56-40.792)
+        self.blocks_nlog10_ff_0 = blocks.nlog10_ff(10, 1, -56)
+        self.blocks_multiply_conjugate_cc_0 = blocks.multiply_conjugate_cc(1)
+        self.blocks_moving_average_xx_0 = blocks.moving_average_ff(4000, 1/4000.0, 4000)
+        self.blocks_complex_to_real_0 = blocks.complex_to_real(1)
 
         ##################################################
         # Connections
@@ -177,18 +211,24 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self.msg_connect((self.blocks_tagged_stream_to_pdu_0_0, 'pdus'), (self.cc_sdr_cc_decoder_0, 'in'))    
         self.msg_connect((self.cc_sdr_cc_decoder_0, 'out'), (self.blocks_socket_pdu_0_0, 'pdus'))    
         self.msg_connect((self.cc_sdr_cc_encoder_0, 'out'), (self.blocks_pdu_to_tagged_stream_0, 'pdus'))    
-        self.connect((self.analog_nbfm_tx_0, 0), (self.low_pass_filter_0, 0))    
-        self.connect((self.blocks_packed_to_unpacked_xx_0, 0), (self.blocks_tagged_stream_multiply_length_0, 0))    
-        self.connect((self.blocks_pdu_to_tagged_stream_0, 0), (self.blocks_packed_to_unpacked_xx_0, 0))    
-        self.connect((self.blocks_tagged_stream_multiply_length_0, 0), (self.digital_chunks_to_symbols_xx_0, 0))    
+        self.connect((self.blocks_complex_to_real_0, 0), (self.blocks_moving_average_xx_0, 0))    
+        self.connect((self.blocks_moving_average_xx_0, 0), (self.blocks_nlog10_ff_0, 0))    
+        self.connect((self.blocks_moving_average_xx_0, 0), (self.blocks_nlog10_ff_0_0, 0))    
+        self.connect((self.blocks_multiply_conjugate_cc_0, 0), (self.blocks_complex_to_real_0, 0))    
+        self.connect((self.blocks_nlog10_ff_0, 0), (self.qtgui_number_sink_0, 0))    
+        self.connect((self.blocks_nlog10_ff_0_0, 0), (self.qtgui_number_sink_0, 1))    
+        self.connect((self.blocks_pdu_to_tagged_stream_0, 0), (self.blocks_tagged_stream_multiply_length_0, 0))    
+        self.connect((self.blocks_tagged_stream_multiply_length_0, 0), (self.digital_gfsk_mod_1, 0))    
         self.connect((self.blocks_tagged_stream_multiply_length_0_0, 0), (self.blocks_tagged_stream_to_pdu_0_0, 0))    
         self.connect((self.blocks_unpacked_to_packed_xx_0_0, 0), (self.blocks_tagged_stream_multiply_length_0_0, 0))    
         self.connect((self.cc_sdr_fixedlen_packet_synchronizer_0, 0), (self.blocks_unpacked_to_packed_xx_0_0, 0))    
-        self.connect((self.digital_chunks_to_symbols_xx_0, 0), (self.analog_nbfm_tx_0, 0))    
         self.connect((self.digital_correlate_access_code_tag_bb_0_0, 0), (self.cc_sdr_fixedlen_packet_synchronizer_0, 0))    
         self.connect((self.digital_fll_band_edge_cc_0, 0), (self.freq_xlating_fir_filter_xxx_1, 0))    
         self.connect((self.digital_gfsk_demod_0, 0), (self.digital_correlate_access_code_tag_bb_0_0, 0))    
+        self.connect((self.digital_gfsk_mod_1, 0), (self.low_pass_filter_0, 0))    
         self.connect((self.freq_xlating_fir_filter_xxx_0, 0), (self.rational_resampler_xxx_0_0, 0))    
+        self.connect((self.freq_xlating_fir_filter_xxx_1, 0), (self.blocks_multiply_conjugate_cc_0, 0))    
+        self.connect((self.freq_xlating_fir_filter_xxx_1, 0), (self.blocks_multiply_conjugate_cc_0, 1))    
         self.connect((self.freq_xlating_fir_filter_xxx_1, 0), (self.digital_gfsk_demod_0, 0))    
         self.connect((self.freq_xlating_fir_filter_xxx_1, 0), (self.qtgui_sink_x_0, 0))    
         self.connect((self.low_pass_filter_0, 0), (self.rational_resampler_xxx_0, 0))    
@@ -214,7 +254,8 @@ class cc_packet(gr.top_block, Qt.QWidget):
 
     def set_rate(self, rate):
         self.rate = rate
-        self.freq_xlating_fir_filter_xxx_1.set_taps((firdes.low_pass(1, self.freq_comp_rate, self.rate, self.rate/20.0)))
+        self.freq_xlating_fir_filter_xxx_1.set_taps((firdes.low_pass(1, self.freq_comp_rate, self.rate*0.625, self.rate/20.0)))
+        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, self.rate * 1.0, 1e3, firdes.WIN_HAMMING, 6.76))
 
     def get_threshold(self):
         return self.threshold
@@ -242,8 +283,8 @@ class cc_packet(gr.top_block, Qt.QWidget):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, 9e3, 1e3, firdes.WIN_HAMMING, 6.76))
         self.qtgui_sink_x_0.set_frequency_range(0, self.samp_rate)
+        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, self.rate * 1.0, 1e3, firdes.WIN_HAMMING, 6.76))
 
     def get_preamble(self):
         return self.preamble
@@ -262,7 +303,7 @@ class cc_packet(gr.top_block, Qt.QWidget):
 
     def set_freq_comp_rate(self, freq_comp_rate):
         self.freq_comp_rate = freq_comp_rate
-        self.freq_xlating_fir_filter_xxx_1.set_taps((firdes.low_pass(1, self.freq_comp_rate, self.rate, self.rate/20.0)))
+        self.freq_xlating_fir_filter_xxx_1.set_taps((firdes.low_pass(1, self.freq_comp_rate, self.rate*0.625, self.rate/20.0)))
 
     def get_fec(self):
         return self.fec

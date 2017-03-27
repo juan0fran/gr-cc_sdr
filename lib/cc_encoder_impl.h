@@ -37,7 +37,8 @@ namespace gr {
       int  d_reclen;
       int  d_uncoded_len;
       int  d_coded_len;
-
+      int  d_preamble_count;
+      
      public:
       cc_encoder_impl(bool has_fec, bool has_rs, bool has_white, int plen);
       ~cc_encoder_impl();

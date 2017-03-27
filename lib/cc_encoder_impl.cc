@@ -101,6 +101,7 @@ namespace gr {
               gr::io_signature::make(0,0,0),
               gr::io_signature::make(0,0,0))
     {
+      d_preamble_count = 36;
       d_has_fec = has_fec;
       d_has_rs = has_rs;
       if (has_fec == false){
@@ -162,7 +163,7 @@ namespace gr {
       unsigned int msg_size = pmt::length(msg);
       
       uint8_t data_in[d_uncoded_len];
-      uint8_t data_rs_out[d_coded_len + 8 + 4];
+      uint8_t data_rs_out[d_coded_len + d_preamble_count + 4];
       uint8_t data_out[d_plen];
             
       unsigned short checksum;
@@ -181,9 +182,9 @@ namespace gr {
       memcpy(data_in, pmt::uniform_vector_elements(msg, offset), msg_size);
 
       if (d_has_fec == false && d_has_rs == true){
-        std::printf("Message size: %d\r\n", msg_size);
-        if ((msg_size - 1) != data_in[0]){
-          if (msg_size < (d_uncoded_len-1)){
+        std::printf("Message size: %d\n", msg_size);
+        if ((msg_size) != data_in[0]){
+          if (msg_size < (d_uncoded_len)){
             for (int i = msg_size; i > 0; i--){
               data_in[i] = data_in[i - 1];
             }
@@ -207,15 +208,13 @@ namespace gr {
           xor_pn9(data_rs_out, d_coded_len);     
         
         for (int i = d_plen; i >= 0; i--)
-          data_rs_out[i + 4 + 4] = data_rs_out[i];
+          data_rs_out[i + d_preamble_count + 4] = data_rs_out[i];
           
         int idx = 0;
         
-        data_rs_out[idx++] = 0xAA;
-        data_rs_out[idx++] = 0xAA;
-        data_rs_out[idx++] = 0xAA;
-        data_rs_out[idx++] = 0xAA;
-          
+        for (idx = 0; idx < d_preamble_count; idx++){
+          data_rs_out[idx] = 0xAA;
+        }           
         data_rs_out[idx++] = 0xD3;
         data_rs_out[idx++] = 0x91;
         data_rs_out[idx++] = 0xD3;
@@ -223,11 +222,12 @@ namespace gr {
         
           message_port_pub(pmt::mp("out"),
         pmt::cons(pmt::PMT_NIL,
-        pmt::init_u8vector(d_coded_len + 4 + 4, data_rs_out)));
+        pmt::init_u8vector(d_coded_len + d_preamble_count + 4, data_rs_out)));
         return;
       }
 
       /* a message is composed by 1B length + (up to) 222B payload, if less, padded */
+      std::printf("Message size: %d\n", msg_size);
       if ((msg_size - 1) != data_in[0]){
         if (msg_size < (d_uncoded_len-1)){
           for (int i = msg_size; i > 0; i--){

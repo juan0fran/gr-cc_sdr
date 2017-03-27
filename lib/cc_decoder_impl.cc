@@ -298,7 +298,7 @@ namespace gr {
             std::cout << "Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;
             message_port_pub(pmt::mp("out"),
                 pmt::cons(pmt::PMT_NIL,
-                pmt::init_u8vector((uncodedPacket[0]), uncodedPacket+1)));
+                pmt::init_u8vector(d_uncoded_len, uncodedPacket)));
           }else{
             d_incorrect += 1;
             std::cout << "Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;
