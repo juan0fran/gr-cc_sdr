@@ -101,7 +101,7 @@ namespace gr {
               gr::io_signature::make(0,0,0),
               gr::io_signature::make(0,0,0))
     {
-      d_preamble_count = 36;
+      d_preamble_count = 12;
       d_has_fec = has_fec;
       d_has_rs = has_rs;
       if (has_fec == false){
@@ -189,6 +189,8 @@ namespace gr {
               data_in[i] = data_in[i - 1];
             }
             data_in[0] = (uint8_t) msg_size;
+          }else if (msg_size == d_uncoded_len){
+            /* do nothing*/
           }else{
             std::printf("Error occured, first byte must indicate packet size\n");
             return;

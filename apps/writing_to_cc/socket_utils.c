@@ -8,6 +8,115 @@
 
 #include "socket_utils.h"
 
+#define FEND    0xC0
+#define FESC    0xDB
+#define TFEND   0xDC
+#define TFESC   0xDD
+
+int read_kiss_from_socket(int fd, char * buffer){
+
+    int i;
+    int out_size;
+    int size;
+    char byte;
+    bool no_frame;
+    bool transpose;
+    byte = 0x00;
+    /* First of all read the two first bytes */
+    while((unsigned char)byte != FEND){
+        size = read(fd, &byte, 1);
+        if (size <= 0){
+            if (size == 0){
+                printf("End of socket\n");
+            }else{
+                perror("Error reading socket -> ");
+            }
+            exit(-1);
+        }
+    }
+    if ((unsigned char)byte == FEND){
+        size = read(fd, &byte, 1);
+        if (size <= 0){
+            if (size == 0){
+                printf("End of socket\n");
+            }else{
+                perror("Error reading socket -> ");
+            }
+            exit(-1);
+        }
+        if ((unsigned char)byte != 0x00){
+            printf("Control frame found: ");
+            no_frame = true;
+            i = 0;
+            transpose = false;
+            while(no_frame){
+                size = read(fd, &byte, 1);
+                if (size <= 0){
+                    if (size == 0){
+                        printf("End of socket\n");
+                    }else{
+                        perror("Error reading socket -> ");
+                    }
+                    exit(-1);
+                }
+                if ((unsigned char)byte == FEND){
+                    no_frame = false;
+                }else if (transpose == true){
+                    if ((unsigned char) byte == TFEND){
+                        buffer[i] = FEND;
+                    }else if ((unsigned char) byte == TFESC){
+                        buffer[i] = FESC;
+                    }
+                    transpose = false;
+                    i++;
+                }else if ((unsigned char) byte == FESC){
+                    transpose = true;
+                }else{
+                    buffer[i] = byte;
+                    i++;
+                }
+            }
+            buffer[i] = '\0';
+            printf("%s\n", buffer);
+            return -2;
+        }
+    }else{
+        return -1;
+    }
+    no_frame = true;
+    i = 0;
+    transpose = false;
+    while(no_frame){
+        size = read(fd, &byte, 1);
+        if (size <= 0){
+            if (size == 0){
+                printf("End of socket\n");
+            }else{
+                perror("Error reading socket -> ");
+            }
+            exit(-1);
+        }
+        if ((unsigned char)byte == FEND){
+            no_frame = false;
+        }else if (transpose == true){
+            if ((unsigned char) byte == TFEND){
+                buffer[i] = FEND;
+            }else if ((unsigned char) byte == TFESC){
+                buffer[i] = FESC;
+            }
+            transpose = false;
+            i++;
+        }else if ((unsigned char) byte == FESC){
+            transpose = true;
+        }else{
+            buffer[i] = byte;
+            i++;
+        }
+    }
+    return i;
+}
+
+
 int socket_init(int port){
     int fd;
     struct hostent *he;
