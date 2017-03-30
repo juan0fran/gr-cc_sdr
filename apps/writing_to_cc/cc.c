@@ -27,8 +27,6 @@ void * read_socket(void * args)
     of_rs_2_m_cb_t rs;
     of_rs_2_m_parameters_t parms;
 
-    printf("Sizeof reed solomon object: %d\n", sizeof(rs));
-
     void * enc_sym_tabs[OF_MAX_ENCODING_SYMBOLS];
     void * dec_sym_tabs[OF_MAX_ENCODING_SYMBOLS];
 
@@ -41,23 +39,32 @@ void * read_socket(void * args)
 
     uint8_t current_packet = 0;
     bool decoded_done = false;
-    uint8_t cnt = 0;
+    uint32_t cnt = 0;
     uint8_t received_packet[218];
     int i, j;
-    printf("We are here waiting for a packet!\n");
 
     chunk_handler_t chunk_tx, chunk_rx;
 
     init_chunk_handler(&chunk_tx);
     init_chunk_handler(&chunk_rx);
+    memset(symb_reserved_space_tx, 0xAA, sizeof(symb_reserved_space_tx));
+    
 
     while(1){
         if ( (ret = read(fd, buffer, MAC_UNCODED_PACKET_SIZE) ) > 0){
             memcpy(packet.raw, buffer, ret);
             ret = set_new_packet_to_chunk(&chunk_rx, &packet, symb_reserved_space_rx);
             if (ret > 0){
-                printf("Received a whole chunk!\n");
+                cnt++;
+                printf("Received a whole chunk: %d received until now\n", cnt);
+                for (i = 0, j = 0; i < ret; i++){
+                    if (symb_reserved_space_rx[i] == symb_reserved_space_tx[i]){
+                        j++;
+                    }
+                }
+                printf("Size of chunk is: %d and contains %d 0xAAs\n", ret, j);
                 /* Sending! */
+                /*
                 sleep(1);
                 printf("Slepts and sending more!\n");
                 while ( (ret = get_new_packet_from_chunk(&chunk_tx, symb_reserved_space_rx, ret, 2, &packet) ) >= 0){
@@ -65,7 +72,7 @@ void * read_socket(void * args)
                     write(fd, buffer, MAC_UNCODED_PACKET_SIZE);
                     if (ret == 0)
                         break;
-                }
+                }*/
 
             }
         }else{

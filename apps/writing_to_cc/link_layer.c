@@ -88,7 +88,6 @@ int set_new_packet_to_chunk(chunk_handler_t * handler, radio_packet_t * p, uint8
 			handler->last_sequence = handler->current_sequence - 1;
 			handler->module_initialised = true;
 		}		
-		printf("New sequence arrived! %d\n", handler->llc.chunk_seq);
 		parms.nb_repair_symbols = handler->llc.r;
 		parms.nb_source_symbols = handler->llc.k;
 		of_rs_2_m_set_fec_parameters(&handler->of_handler, &parms);
@@ -97,20 +96,25 @@ int set_new_packet_to_chunk(chunk_handler_t * handler, radio_packet_t * p, uint8
 		/* This is done just once to make sure capture all the packets! */
 		/* And make the stuff */
 	}
-	if (handler->current_sequence == handler->last_sequence){
+	if (handler->current_sequence != handler->last_sequence){
 		/* In case that last_seq_received is == to the current sequence, drop the packet, 
 		 * since the chunk is already received */
-		printf("Dropped packet with parameters K: %d, R: %d and ESI: %d\n", handler->llc.k, handler->llc.r, handler->llc.esi);
-	}else{
-		printf("New packet has been received with parameters K: %d, R: %d and ESI: %d from Seq: %d\n", handler->llc.k, handler->llc.r, handler->llc.esi, handler->llc.chunk_seq);
 		idx = handler->current_chunk_count * handler->of_handler.encoding_symbol_length;
 		memcpy(&handler->chunk_reserved_memory[idx], p->fields.data, handler->of_handler.encoding_symbol_length);
-		of_rs_2_m_decode_with_new_symbol(&handler->of_handler, &handler->chunk_reserved_memory[idx], handler->llc.esi);
+		ret = of_rs_2_m_decode_with_new_symbol(&handler->of_handler, &handler->chunk_reserved_memory[idx], handler->llc.esi);
+		if (ret != OF_STATUS_OK){
+			printf("[OPENFEC] decode returned: %d\n", ret);
+			return 0;
+		}
 		handler->current_chunk_count++;
 		if (handler->current_chunk_count == handler->llc.k && handler->of_handler.decoding_finished){
 			handler->last_sequence = handler->current_sequence;
 			ret = of_rs_2_m_get_source_symbols_tab(&handler->of_handler, handler->symb_tabs);
-            printf("[OPENFEC] get source symbols returned: %d\n", ret);
+			if (ret != OF_STATUS_OK){
+				printf("[OPENFEC] get source symbols returned: %d\n", ret);	
+				return 0;
+			}
+			printf("Decoded new sequence with K: %d, R: %d and ESI: %d from Seq: %d\n", handler->llc.k, handler->llc.r, handler->llc.esi, handler->llc.chunk_seq);			
             for (i = 0; i < handler->llc.k; i++){
 	            memcpy(chunk+i*handler->of_handler.encoding_symbol_length, handler->symb_tabs[i], handler->of_handler.encoding_symbol_length);
         	}
@@ -125,6 +129,7 @@ int get_new_packet_from_chunk(chunk_handler_t * handler, uint8_t * chunk, uint16
 	of_rs_2_m_parameters_t parms;
 	int packet_count;
 	int idx;
+	int ret;
 	if (handler == NULL || p == NULL || chunk == NULL){
 		return -1;
 	}
@@ -133,7 +138,7 @@ int get_new_packet_from_chunk(chunk_handler_t * handler, uint8_t * chunk, uint16
 	}
 	if (! handler->library_initialised){
 		init_chunk_handler(handler);
-	}	
+	}
     parms.encoding_symbol_length = MAC_PAYLOAD_SIZE;
 	/* Generates from a given chunk a set of packets and add redundancy on top of it! */
 	if (handler->current_sequence != handler->last_sequence || !(handler->module_initialised)){
@@ -157,7 +162,11 @@ int get_new_packet_from_chunk(chunk_handler_t * handler, uint8_t * chunk, uint16
 		parms.nb_repair_symbols = handler->llc.r;
 
 		/* Generate the FEC table */
-		of_rs_2_m_set_fec_parameters(&handler->of_handler, &parms);
+		ret = of_rs_2_m_set_fec_parameters(&handler->of_handler, &parms);
+		if (ret != OF_STATUS_OK){
+			printf("[OPENFEC] Generate the FEC table failed\n");
+			return -1;
+		}
 		memset(handler->chunk_reserved_memory, 0, sizeof(handler->chunk_reserved_memory));
 		memcpy(handler->chunk_reserved_memory, chunk, size);
 		handler->last_sequence = handler->current_sequence;
