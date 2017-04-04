@@ -40,7 +40,6 @@
 
 #ifdef OF_USE_REED_SOLOMON_2_M_CODEC
 
-
 #define SWAP(a,b,t) {t tmp; tmp=a; a=b; b=tmp;}
 
 extern const gf of_gf_2_4_log[16];
@@ -63,14 +62,14 @@ void	of_galois_field_2_4_addmul1(gf *dst1, gf *src1, gf c, int sz);
  * mulc table works on two elements at a time. This is a highly effective solution which
  * warrants high performances.
  */
-void         of_galois_field_2_4_addmul1_compact (gf *dst1, gf *src1, gf c, int sz);
+void    of_galois_field_2_4_addmul1_compact(gf *dst1, gf *src1, gf c, int sz);
 
 /*
  * computes C = AB where A is n*k, B is k*m, C is n*m
  */
 void	of_galois_field_2_4_matmul (gf *a, gf *b, gf *c, int n, int k, int m);
-int	of_galois_field_2_4_invert_mat (of_galois_field_code_cb_t* ofcb, gf *src, int k);
-int	of_galois_field_2_4_invert_vdm (of_galois_field_code_cb_t* ofcb, gf *src, int k);
+int	    of_galois_field_2_4_invert_mat (of_galois_field_code_cb_t* ofcb, gf *src, int k);
+int	    of_galois_field_2_4_invert_vdm (of_galois_field_code_cb_t* ofcb, gf *src, int k);
 
 #endif //OF_USE_GALOIS_FIELD_CODES_UTILS
 

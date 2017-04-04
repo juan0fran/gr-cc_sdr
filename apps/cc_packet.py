@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Cc Packet
-# Generated: Tue Mar 28 09:27:11 2017
+# Generated: Tue Apr  4 10:52:45 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -102,7 +102,7 @@ class cc_packet(gr.top_block, Qt.QWidget):
         )
         self.uhd_usrp_sink_0.set_samp_rate(source_rate)
         self.uhd_usrp_sink_0.set_center_freq(434.92*1e6, 0)
-        self.uhd_usrp_sink_0.set_gain(85, 0)
+        self.uhd_usrp_sink_0.set_gain(76, 0)
         self.uhd_usrp_sink_0.set_antenna("TX/RX", 0)
         self.rational_resampler_xxx_0_0 = filter.rational_resampler_ccc(
                 interpolation=int(freq_comp_rate),
@@ -279,8 +279,8 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self.source_rate = source_rate
         self.freq_xlating_fir_filter_xxx_0.set_taps((firdes.low_pass(1, self.source_rate, self.filter_width/2.0, self.filter_width/20.0)))
         self.low_pass_filter_0_0.set_taps(firdes.low_pass(1, self.source_rate, self.samp_rate/2.0, self.samp_rate/20.0, firdes.WIN_HAMMING, 6.76))
-        self.uhd_usrp_sink_0.set_samp_rate(self.source_rate)
         self.uhd_usrp_source_0.set_samp_rate(self.source_rate)
+        self.uhd_usrp_sink_0.set_samp_rate(self.source_rate)
 
     def get_samp_rate(self):
         return self.samp_rate

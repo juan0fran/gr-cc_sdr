@@ -46,11 +46,11 @@ typedef union __attribute__ ((__packed__)) radio_packet_s{
 #endif
 
 typedef struct __attribute__ ((__packed__)) llc_parms_s{
-	uint8_t k;
-	uint8_t r;
-	uint8_t esi;
-	uint8_t chunk_seq;
-	uint8_t src_addr;
+	uint8_t    k;
+	uint8_t    r;
+	uint8_t    esi;
+	uint8_t    chunk_seq;
+	uint8_t    src_addr;
 }llc_parms_t;
 
 typedef struct __attribute__ ((__packed__)) chunk_handler_s{

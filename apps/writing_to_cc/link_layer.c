@@ -65,6 +65,10 @@ int init_chunk_handler(chunk_handler_t * handler)
 	}
 }
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
+
 int set_new_packet_to_chunk(chunk_handler_t * handler, radio_packet_t * p, uint8_t * chunk)
 {
 	/* This gets the LLC PARMS */
@@ -93,12 +97,17 @@ int set_new_packet_to_chunk(chunk_handler_t * handler, radio_packet_t * p, uint8
 		of_rs_2_m_set_fec_parameters(&handler->of_handler, &parms);
 		handler->current_sequence = handler->llc.chunk_seq;
 		handler->current_chunk_count = 0;
+		srand (time(NULL));
 		/* This is done just once to make sure capture all the packets! */
 		/* And make the stuff */
 	}
 	if (handler->current_sequence != handler->last_sequence){
 		/* In case that last_seq_received is == to the current sequence, drop the packet, 
 		 * since the chunk is already received */
+		if (rand()%100 > 90){
+			printf("[SIMULATION]: Packet with ESI: %d has been droped\n", handler->llc.esi);
+			return 0;
+		}
 		idx = handler->current_chunk_count * handler->of_handler.encoding_symbol_length;
 		memcpy(&handler->chunk_reserved_memory[idx], p->fields.data, handler->of_handler.encoding_symbol_length);
 		ret = of_rs_2_m_decode_with_new_symbol(&handler->of_handler, &handler->chunk_reserved_memory[idx], handler->llc.esi);
@@ -107,7 +116,7 @@ int set_new_packet_to_chunk(chunk_handler_t * handler, radio_packet_t * p, uint8
 			return 0;
 		}
 		handler->current_chunk_count++;
-		if (handler->current_chunk_count == handler->llc.k && handler->of_handler.decoding_finished){
+		if (handler->current_chunk_count >= handler->llc.k && handler->of_handler.decoding_finished){
 			handler->last_sequence = handler->current_sequence;
 			ret = of_rs_2_m_get_source_symbols_tab(&handler->of_handler, handler->symb_tabs);
 			if (ret != OF_STATUS_OK){

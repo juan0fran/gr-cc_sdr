@@ -2,6 +2,8 @@
 #include "link_layer.h"
 #include "of_reed-solomon_gf_2_m.h"
 
+#define __OF_TEST__
+
 int fd;
 
 void * write_socket(void * args)
@@ -11,8 +13,109 @@ void * write_socket(void * args)
     printf("Write socket task\n");
     while(1) {
         sprintf(buffer, "Test from USRP %d", i++);
-        write(fd, buffer, strlen(buffer));
-        usleep((rand()%1500 + 500) * 1000);
+        //write(fd, buffer, strlen(buffer));
+        usleep((rand()%500 + 500) * 1000);
+    }
+}
+
+#ifndef __OF_TEST__
+
+void * read_socket(void * args)
+{
+    char c;
+    char buffer[128];
+    printf("Read socket task\n");
+    unsigned int cnt = 0;
+    while(1){
+        if (read(fd, &c, 1) ){
+            if (c == '\n'){
+                printf(" Cnt: %d\n", cnt++);
+            }else{
+                printf("%c", c);  
+            }
+        }
+    }
+}
+
+#else
+
+static of_rs_2_m_cb_t rs;
+
+void print_ptr(uint8_t * ptr)
+{
+    int j;
+    for (j = 0; j < rs.encoding_symbol_length; j++)
+        printf("%02x%s", ptr[j], j%32==31?"\n":" ");
+    printf("\n");
+}
+
+void test_openfec(void)
+{
+
+    of_rs_2_m_parameters_t parms;
+
+    void * enc_sym_tabs[OF_MAX_ENCODING_SYMBOLS];
+    void * dec_sym_tabs[OF_MAX_ENCODING_SYMBOLS];
+
+    uint8_t symb_reserved_space_tx[OF_MAX_ENCODING_SYMBOLS * OF_MAX_SYMBOL_SIZE];
+    uint8_t symb_reserved_space_rx[OF_MAX_ENCODING_SYMBOLS * OF_MAX_SYMBOL_SIZE];
+
+    int i;
+
+    of_rs_2_m_create_codec_instance(&rs);
+    parms.encoding_symbol_length = 100;
+    parms.nb_source_symbols = 6;
+    parms.nb_repair_symbols = 2;
+
+    of_rs_2_m_set_fec_parameters(&rs, &parms);
+
+    memset(enc_sym_tabs, 0, sizeof(enc_sym_tabs));
+    memset(dec_sym_tabs, 0, sizeof(dec_sym_tabs));
+
+    for (i = 0; i < rs.nb_source_symbols; i++){
+        memset(&symb_reserved_space_tx[i * rs.encoding_symbol_length], 0xAA, rs.encoding_symbol_length);
+        enc_sym_tabs[i] = &symb_reserved_space_tx[i * rs.encoding_symbol_length];
+        //of_rs_2_m_build_repair_symbol(&rs, enc_sym_tabs, i);
+        //llc.esi = i;
+        //build_llc_packet(enc_sym_tabs[i], rs.encoding_symbol_length, &llc, &packet);
+        //radio_send_packet(&spi, &radio, &packet);
+        printf("Encoded %d\n", i);
+        print_ptr(enc_sym_tabs[i]); 
+    }
+
+    for (i = rs.nb_source_symbols; i < rs.nb_encoding_symbols; i++){
+        memset(&symb_reserved_space_tx[i * rs.encoding_symbol_length], 0xAA, rs.encoding_symbol_length);
+        enc_sym_tabs[i] = &symb_reserved_space_tx[i * rs.encoding_symbol_length];
+        of_rs_2_m_build_repair_symbol(&rs, enc_sym_tabs, i);
+
+        printf("Encoded %d\n", i);
+        print_ptr(enc_sym_tabs[i]); 
+        //llc.esi = i;
+        //build_llc_packet(enc_sym_tabs[i], rs.encoding_symbol_length, &llc, &packet);
+        //radio_send_packet(&spi, &radio, &packet);
+    }
+    printf("\n");
+    of_rs_2_m_set_fec_parameters(&rs, &parms);
+
+    for (i = 0; i < rs.nb_source_symbols; i++){
+        memcpy(&symb_reserved_space_rx[(i+1)*rs.encoding_symbol_length], enc_sym_tabs[i+1], rs.encoding_symbol_length);     
+        printf ("Decode w new %d\n", of_rs_2_m_decode_with_new_symbol(&rs, &symb_reserved_space_rx[(i+1) * rs.encoding_symbol_length], i+1));
+    }
+    of_rs_2_m_get_source_symbols_tab(&rs, dec_sym_tabs);
+    int equal = 0;
+    int j;
+    for (i = 0; i < rs.nb_source_symbols; i++){
+
+        printf("Decoded %d\n", i);
+        print_ptr(dec_sym_tabs[i]);
+        if (memcmp(dec_sym_tabs[i], enc_sym_tabs[i], rs.encoding_symbol_length) == 0){
+            equal++;
+        }
+    }
+    if (equal == rs.nb_source_symbols){
+        printf("Correct\n");
+    }else{
+        printf("Incorrect\n");
     }
 }
 
@@ -35,12 +138,10 @@ void * read_socket(void * args)
 
     of_rs_2_m_create_codec_instance(&rs);
 
-    parms.encoding_symbol_length = 218;
-
     uint8_t current_packet = 0;
     bool decoded_done = false;
     uint32_t cnt = 0;
-    uint8_t received_packet[218];
+
     int i, j;
 
     chunk_handler_t chunk_tx, chunk_rx;
@@ -58,11 +159,12 @@ void * read_socket(void * args)
                 cnt++;
                 printf("Received a whole chunk: %d received until now\n", cnt);
                 for (i = 0, j = 0; i < ret; i++){
-                    if (symb_reserved_space_rx[i] == symb_reserved_space_tx[i]){
+                    if (symb_reserved_space_rx[i] == i%256){
                         j++;
                     }
                 }
-                printf("Size of chunk is: %d and contains %d 0xAAs\n", ret, j);
+                printf("Size of chunk is: %d and contains %d corrects\n", ret, j);
+
                 /* Sending! */
                 /*
                 sleep(1);
@@ -111,14 +213,21 @@ void * read_socket(void * args)
     }
 }
 
+#endif
+
 int main(void)
 {
     pthread_t threads[2];
     int rc;
     fd = socket_init(52001);
-    read_socket(NULL);
-    //pthread_create(&threads[0], NULL, write_socket, NULL);
-    //pthread_create(&threads[1], NULL, read_socket, NULL);
 
-    while(1);
+    #ifndef __OF_TEST__
+    pthread_create(&threads[0], NULL, write_socket, NULL);
+    pthread_create(&threads[1], NULL, read_socket, NULL);
+    #else
+    read_socket(NULL);
+    //test_openfec();
+    #endif
+
+    //while(1);
 }
