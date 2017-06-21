@@ -3,7 +3,7 @@
  *
  * This software library is licensed under terms of the GNU GENERAL
  * PUBLIC LICENSE
- * 
+ *
  *
  * RSCODE is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 /* static function definition */
 
 static void init_galois_tables (void);
-static int ginv(int elt); 
+static int ginv(int elt);
 static int gmult(int a, int b);
 
 /* polynomial arithmetic */
@@ -94,31 +94,31 @@ static int DEBUG = FALSE;
 /* From  Cain, Clark, "Error-Correction Coding For Digital Communications", pp. 216. */
 static void
 Modified_Berlekamp_Massey (void)
-{	
+{
   int n, L, L2, k, d, i;
   int psi[MAXDEG], psi2[MAXDEG], D[MAXDEG];
   int gamma[MAXDEG];
-	
+
   /* initialize Gamma, the erasure locator polynomial */
   init_gamma(gamma);
 
   /* initialize to z */
   copy_poly(D, gamma);
   mul_z_poly(D);
-	
-  copy_poly(psi, gamma);	
+
+  copy_poly(psi, gamma);
   k = -1; L = NErasures;
-	
+
   for (n = NErasures; n < NPAR; n++) {
-	
+
     d = compute_discrepancy(psi, synBytes, L, n);
-		
+
     if (d != 0) {
-		
+
       /* psi2 = psi - d*D */
       for (i = 0; i < MAXDEG; i++) psi2[i] = psi[i] ^ gmult(d, D[i]);
-		
-		
+
+
       if (L < (n-k)) {
 	L2 = n-k;
 	k = n-L;
@@ -126,22 +126,22 @@ Modified_Berlekamp_Massey (void)
 	for (i = 0; i < MAXDEG; i++) D[i] = gmult(psi[i], ginv(d));
 	L = L2;
       }
-			
+
       /* psi = psi2 */
       for (i = 0; i < MAXDEG; i++) psi[i] = psi2[i];
     }
-		
+
     mul_z_poly(D);
   }
-	
+
   for(i = 0; i < MAXDEG; i++) Lambda[i] = psi[i];
   compute_modified_omega();
 
-	
+
 }
 
 /* given Psi (called Lambda in Modified_Berlekamp_Massey) and synBytes,
-   compute the combined erasure/error evaluator polynomial as 
+   compute the combined erasure/error evaluator polynomial as
    Psi*S mod z^4
   */
 static void
@@ -149,8 +149,8 @@ compute_modified_omega ()
 {
   int i;
   int product[MAXDEG*2];
-	
-  mult_polys(product, Lambda, synBytes);	
+
+  mult_polys(product, Lambda, synBytes);
   zero_poly(Omega);
   for(i = 0; i < NPAR; i++) Omega[i] = product[i];
 
@@ -162,35 +162,35 @@ mult_polys (int dst[], int p1[], int p2[])
 {
   int i, j;
   int tmp1[MAXDEG*2];
-	
+
   for (i=0; i < (MAXDEG*2); i++) dst[i] = 0;
-	
+
   for (i = 0; i < MAXDEG; i++) {
     for(j=MAXDEG; j<(MAXDEG*2); j++) tmp1[j]=0;
-		
+
     /* scale tmp1 by p1[i] */
     for(j=0; j<MAXDEG; j++) tmp1[j]=gmult(p2[j], p1[i]);
     /* and mult (shift) tmp1 right by i */
     for (j = (MAXDEG*2)-1; j >= i; j--) tmp1[j] = tmp1[j-i];
     for (j = 0; j < i; j++) tmp1[j] = 0;
-		
+
     /* add into partial product */
     for(j=0; j < (MAXDEG*2); j++) dst[j] ^= tmp1[j];
   }
 }
 
 
-	
+
 /* gamma = product (1-z*a^Ij) for erasure locs Ij */
 static void
 init_gamma (int gamma[])
 {
   int e, tmp[MAXDEG];
-	
+
   zero_poly(gamma);
   zero_poly(tmp);
   gamma[0] = 1;
-	
+
   for (e = 0; e < NErasures; e++) {
     copy_poly(tmp, gamma);
     scale_poly(gexp[ErasureLocs[e]], tmp);
@@ -198,10 +198,10 @@ init_gamma (int gamma[])
     add_polys(gamma, tmp);
   }
 }
-	
-	
-	
-static void 
+
+
+
+static void
 compute_next_omega (int d, int A[], int dst[], int src[])
 {
   int i;
@@ -209,41 +209,41 @@ compute_next_omega (int d, int A[], int dst[], int src[])
     dst[i] = src[i] ^ gmult(d, A[i]);
   }
 }
-	
+
 
 
 static int
 compute_discrepancy (int lambda[], int S[], int L, int n)
 {
   int i, sum=0;
-	
-  for (i = 0; i <= L; i++) 
+
+  for (i = 0; i <= L; i++)
     sum ^= gmult(lambda[i], S[n-i]);
   return (sum);
 }
 
 /********** polynomial arithmetic *******************/
 
-static void add_polys (int dst[], int src[]) 
+static void add_polys (int dst[], int src[])
 {
   int i;
   for (i = 0; i < MAXDEG; i++) dst[i] ^= src[i];
 }
 
-static void copy_poly (int dst[], int src[]) 
+static void copy_poly (int dst[], int src[])
 {
   int i;
   for (i = 0; i < MAXDEG; i++) dst[i] = src[i];
 }
 
-static void scale_poly (int k, int poly[]) 
-{	
+static void scale_poly (int k, int poly[])
+{
   int i;
   for (i = 0; i < MAXDEG; i++) poly[i] = gmult(k, poly[i]);
 }
 
 
-static void zero_poly (int poly[]) 
+static void zero_poly (int poly[])
 {
   int i;
   for (i = 0; i < MAXDEG; i++) poly[i] = 0;
@@ -260,47 +260,47 @@ static void mul_z_poly (int src[])
 
 
 /* Finds all the roots of an error-locator polynomial with coefficients
- * Lambda[j] by evaluating Lambda at successive values of alpha. 
- * 
+ * Lambda[j] by evaluating Lambda at successive values of alpha.
+ *
  * This can be tested with the decoder's equations case.
  */
 
 
-static void 
+static void
 Find_Roots (void)
 {
-  int sum, r, k;	
+  int sum, r, k;
   NErrors = 0;
-  
+
   for (r = 1; r < 256; r++) {
     sum = 0;
     /* evaluate lambda at r */
     for (k = 0; k < NPAR+1; k++) {
       sum ^= gmult(gexp[(k*r)%255], Lambda[k]);
     }
-    if (sum == 0) 
-      { 
-	ErrorLocs[NErrors] = (255-r); NErrors++; 
+    if (sum == 0)
+      {
+	ErrorLocs[NErrors] = (255-r); NErrors++;
 	if (DEBUG) fprintf(stderr, "Root found at r = %d, (255-r) = %d\n", r, (255-r));
       }
   }
 }
 
-/* Combined Erasure And Error Magnitude Computation 
- * 
+/* Combined Erasure And Error Magnitude Computation
+ *
  * Pass in the codeword, its size in bytes, as well as
  * an array of any known erasure locations, along the number
  * of these erasures.
- * 
+ *
  * Evaluate Omega(actually Psi)/Lambda' at the roots
- * alpha^(-i) for error locs i. 
+ * alpha^(-i) for error locs i.
  *
  * Returns 1 if everything ok, or 0 if an out-of-bounds error is found
  *
  */
 
 static int
-correct_errors_erasures (unsigned char codeword[], 
+correct_errors_erasures (unsigned char codeword[],
 			 int csize,
 			 int nerasures,
 			 int erasures[])
@@ -308,16 +308,16 @@ correct_errors_erasures (unsigned char codeword[],
   int r, i, j, err;
 
   /* If you want to take advantage of erasure correction, be sure to
-     set NErasures and ErasureLocs[] with the locations of erasures. 
+     set NErasures and ErasureLocs[] with the locations of erasures.
      */
   NErasures = nerasures;
   for (i = 0; i < NErasures; i++) ErasureLocs[i] = erasures[i];
 
   Modified_Berlekamp_Massey();
   Find_Roots();
-  
 
-  if ((NErrors <= NPAR) && NErrors > 0) { 
+
+  if ((NErrors <= NPAR) && NErrors > 0) {
 
     /* first check for illegal error locs */
     for (r = 0; r < NErrors; r++) {
@@ -333,18 +333,18 @@ correct_errors_erasures (unsigned char codeword[],
       /* evaluate Omega at alpha^(-i) */
 
       num = 0;
-      for (j = 0; j < MAXDEG; j++) 
+      for (j = 0; j < MAXDEG; j++)
 	num ^= gmult(Omega[j], gexp[((255-i)*j)%255]);
-      
+
       /* evaluate Lambda' (derivative) at alpha^(-i) ; all odd powers disappear */
       denom = 0;
       for (j = 1; j < MAXDEG; j += 2) {
 	denom ^= gmult(Lambda[j], gexp[((255-i)*(j-1)) % 255]);
       }
-      
+
       err = gmult(num, ginv(denom));
       if (DEBUG) fprintf(stderr, "Error magnitude %#x at loc %d\n", err, csize-i);
-      
+
       codeword[csize-i-1] ^= err;
     }
     return(1);
@@ -379,26 +379,26 @@ correct_errors_erasures (unsigned char codeword[],
  * contact author for details.
  *
  * Source code is available at http://rscode.sourceforge.net
- * 
+ *
  *
  * Multiplication and Arithmetic on Galois Field GF(256)
  *
  * From Mee, Daniel, "Magnetic Recording, Volume III", Ch. 5 by Patel.
- * 
+ *
  *
  ******************************/
- 
+
 /* This is one of 14 irreducible polynomials
  * of degree 8 and cycle length 255. (Ch 5, pp. 275, Magnetic Recording)
  * The high order 1 bit is implicit */
 /* x^8 + x^4 + x^3 + x^2 + 1 */
-#define PPOLY 0x1D 
+#define PPOLY 0x1D
 
 static void init_exp_table (void);
 
 static void
 init_galois_tables (void)
-{ 
+{
   /* initialize the table of powers of alpha */
   init_exp_table();
 }
@@ -412,11 +412,11 @@ init_exp_table (void)
 
   pinit = p2 = p3 = p4 = p5 = p6 = p7 = p8 = 0;
   p1 = 1;
-  
+
   gexp[0] = 1;
   gexp[255] = gexp[0];
   glog[0] = 0;      /* shouldn't log[0] be an error? */
-  
+
   for (i = 1; i < 256; i++) {
     pinit = p8;
     p8 = p7;
@@ -430,7 +430,7 @@ init_exp_table (void)
     gexp[i] = p1 + p2*2 + p3*4 + p4*8 + p5*16 + p6*32 + p7*64 + p8*128;
     gexp[i+255] = gexp[i];
   }
-  
+
   for (i = 1; i < 256; i++) {
     for (z = 0; z < 256; z++) {
       if (gexp[z] == i) {
@@ -450,15 +450,15 @@ static int gmult(int a, int b)
   j = glog[b];
   return (gexp[i+j]);
 }
-    
 
-static int ginv (int elt) 
-{ 
+
+static int ginv (int elt)
+{
   return (gexp[255-glog[elt]]);
-} 
+}
 
-/* 
- * Reed Solomon Encoder/Decoder 
+/*
+ * Reed Solomon Encoder/Decoder
  *
  * Copyright Henry Minsky (hqm@alum.mit.edu) 1991-2009
  *
@@ -507,10 +507,10 @@ zero_fill_from (unsigned char buf[], int from, int to)
 /* debugging routines */
 static void
 print_parity (void)
-{ 
+{
   int i;
   printf("Parity Bytes: ");
-  for (i = 0; i < NPAR; i++) 
+  for (i = 0; i < NPAR; i++)
     printf("[%d]:%x, ",i,pBytes[i]);
   printf("\n");
 }
@@ -518,10 +518,10 @@ print_parity (void)
 
 static void
 print_syndrome (void)
-{ 
+{
   int i;
   printf("Syndrome Bytes: ");
-  for (i = 0; i < NPAR; i++) 
+  for (i = 0; i < NPAR; i++)
     printf("[%d]:%x, ",i,synBytes[i]);
   printf("\n");
 }
@@ -531,21 +531,21 @@ static void
 build_codeword (unsigned char msg[], int nbytes, unsigned char dst[])
 {
   int i;
-  
+
   for (i = 0; i < nbytes; i++) dst[i] = msg[i];
-  
+
   for (i = 0; i < NPAR; i++) {
     dst[i+nbytes] = pBytes[NPAR-1-i];
   }
 }
-  
+
 /**********************************************************
- * Reed Solomon Decoder 
+ * Reed Solomon Decoder
  *
  * Computes the syndrome of a codeword. Puts the results
  * into the synBytes[] array.
  */
- 
+
 static void
 decode_data(unsigned char data[], int nbytes)
 {
@@ -577,19 +577,19 @@ check_syndrome (void)
 
 static void
 debug_check_syndrome (void)
-{ 
+{
   int i;
-  
+
   for (i = 0; i < 3; i++) {
-    printf(" inv log S[%d]/S[%d] = %d\n", i, i+1, 
+    printf(" inv log S[%d]/S[%d] = %d\n", i, i+1,
      glog[gmult(synBytes[i], ginv(synBytes[i+1]))]);
   }
 }
 
 
-/* Create a generator polynomial for an n byte RS code. 
+/* Create a generator polynomial for an n byte RS code.
  * The coefficients are returned in the genPoly arg.
- * Make sure that the genPoly array which is passed in is 
+ * Make sure that the genPoly array which is passed in is
  * at least n+1 bytes long.
  */
 
@@ -597,7 +597,7 @@ static void
 compute_genpoly (int nbytes, int genpoly[])
 {
   int i, tp[256], tp1[256];
-  
+
   /* multiply (x + a^n) for n = 1 to nbytes */
 
   zero_poly(tp1);
@@ -607,25 +607,25 @@ compute_genpoly (int nbytes, int genpoly[])
     zero_poly(tp);
     tp[0] = gexp[i];    /* set up x+a^n */
     tp[1] = 1;
-    
+
     mult_polys(genpoly, tp, tp1);
     copy_poly(tp1, genpoly);
   }
 }
 
-/* Simulate a LFSR with generator polynomial for n byte RS code. 
- * Pass in a pointer to the data array, and amount of data. 
+/* Simulate a LFSR with generator polynomial for n byte RS code.
+ * Pass in a pointer to the data array, and amount of data.
  *
  * The parity bytes are deposited into pBytes[], and the whole message
  * and parity are copied to dest to make a codeword.
- * 
+ *
  */
 
 static void
 encode_data (unsigned char msg[], int nbytes, unsigned char dst[])
 {
   int i, LFSR[NPAR+1],dbyte, j;
-  
+
   for(i=0; i < NPAR+1; i++) LFSR[i]=0;
 
   for (i = 0; i < nbytes; i++) {
@@ -636,9 +636,9 @@ encode_data (unsigned char msg[], int nbytes, unsigned char dst[])
     LFSR[0] = gmult(genPoly[0], dbyte);
   }
 
-  for (i = 0; i < NPAR; i++) 
+  for (i = 0; i < NPAR; i++)
     pBytes[i] = LFSR[i];
-  
+
   build_codeword(msg, nbytes, dst);
 }
 
@@ -650,7 +650,7 @@ encode_data (unsigned char msg[], int nbytes, unsigned char dst[])
 static int library_initalised = FALSE;
 
 int
-encode_rs_message(  unsigned char * uncoded_message, int uncoded_len, 
+encode_rs_message(  unsigned char * uncoded_message, int uncoded_len,
                     unsigned char * coded_message, int coded_len)
 {
   if (library_initalised == FALSE)
@@ -667,7 +667,7 @@ encode_rs_message(  unsigned char * uncoded_message, int uncoded_len,
   return coded_len;
 }
 
-int 
+int
 decode_rs_message(  unsigned char * coded_message, int coded_len,
                     unsigned char * uncoded_message, int uncoded_len)
 {
@@ -689,15 +689,15 @@ decode_rs_message(  unsigned char * coded_message, int coded_len,
       decode_data(coded_message, coded_len);
       if (check_syndrome() == 0){
         memcpy(uncoded_message, coded_message, uncoded_len);
-        return uncoded_len;
+        return NErrors;
       }else{
-        return 0;
+        return -1;
       }
     }else{
-      return 0;
+      return -1;
     }
   }else{
       memcpy(uncoded_message, coded_message, uncoded_len);
-      return uncoded_len;
+      return 0;
   }
 }

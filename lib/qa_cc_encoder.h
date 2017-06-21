@@ -19,38 +19,28 @@
  */
 
 
-#ifndef INCLUDED_CC_SDR_CC_ENCODER_H
-#define INCLUDED_CC_SDR_CC_ENCODER_H
+#ifndef _QA_CC_ENCODER_H_
+#define _QA_CC_ENCODER_H_
 
-#include <cc_sdr/api.h>
-#include <gnuradio/sync_block.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestCase.h>
 
 namespace gr {
   namespace cc_sdr {
 
-    /*!
-     * \brief <+description of block+>
-     * \ingroup cc_sdr
-     *
-     */
-    class CC_SDR_API cc_encoder : virtual public gr::sync_block
+    class qa_cc_encoder : public CppUnit::TestCase
     {
-     public:
-      typedef boost::shared_ptr<cc_encoder> sptr;
+    public:
+      CPPUNIT_TEST_SUITE(qa_cc_encoder);
+      CPPUNIT_TEST(t1);
+      CPPUNIT_TEST_SUITE_END();
 
-      /*!
-       * \brief Return a shared_ptr to a new instance of cc_sdr::cc_encoder.
-       *
-       * To avoid accidental use of raw pointers, cc_sdr::cc_encoder's
-       * constructor is in a private implementation
-       * class. cc_sdr::cc_encoder::make is the public interface for
-       * creating new instances.
-       */
-      static sptr make(bool has_fec, bool has_rs, bool has_white, int plen);
+    private:
+      void t1();
     };
 
-  } // namespace cc_sdr
-} // namespace gr
+  } /* namespace cc_sdr */
+} /* namespace gr */
 
-#endif /* INCLUDED_CC_SDR_CC_ENCODER_H */
+#endif /* _QA_CC_ENCODER_H_ */
 

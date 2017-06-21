@@ -10,6 +10,7 @@
 %{
 #include "cc_sdr/cc_decoder.h"
 #include "cc_sdr/cc_encoder.h"
+#include "cc_sdr/cc_encoder.h"
 %}
 
 

@@ -46,3 +46,4 @@ GR_ADD_TEST(qa_cc_decoder ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_cc
 GR_ADD_TEST(qa_fixedlen_packet_synchronizer ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_fixedlen_packet_synchronizer.py)
 GR_ADD_TEST(qa_cc_encoder ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_cc_encoder.py)
 GR_ADD_TEST(qa_fixedlen_packet_syncword_preamble ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_fixedlen_packet_syncword_preamble.py)
+GR_ADD_TEST(qa_cc_encoder ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_cc_encoder.py)

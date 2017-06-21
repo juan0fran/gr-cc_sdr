@@ -16,10 +16,10 @@
 # along with GNU Radio; see the file COPYING.  If not, write to
 # the Free Software Foundation, Inc., 51 Franklin Street,
 # Boston, MA 02110-1301, USA.
-
 install(FILES
     cc_sdr_cc_decoder.xml
     cc_sdr_fixedlen_packet_synchronizer.xml
     cc_sdr_cc_encoder.xml
-    cc_sdr_fixedlen_packet_syncword_preamble.xml DESTINATION share/gnuradio/grc/blocks
+    cc_sdr_fixedlen_packet_syncword_preamble.xml
+    cc_sdr_cc_encoder.xml DESTINATION share/gnuradio/grc/blocks
 )

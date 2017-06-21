@@ -26,11 +26,13 @@
  */
 
 #include "qa_cc_sdr.h"
+#include "qa_cc_encoder.h"
 
 CppUnit::TestSuite *
 qa_cc_sdr::suite()
 {
   CppUnit::TestSuite *s = new CppUnit::TestSuite("cc_sdr");
+  s->addTest(gr::cc_sdr::qa_cc_encoder::suite());
 
   return s;
 }

@@ -1,17 +1,17 @@
 /* -*- c++ -*- */
-/* 
+/*
  * Copyright 2016 <+YOU OR YOUR COMPANY+>.
- * 
+ *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -131,7 +131,7 @@ namespace gr {
       }
       d_has_white = has_white;
       d_reclen = plen;
-      
+
       d_correct = 0;
       d_correct_without_rs = 0;
       d_correct_with_rs = 0;
@@ -144,7 +144,7 @@ namespace gr {
       message_port_register_out(pmt::mp("out"));
       message_port_register_in(pmt::mp("in"));
       set_msg_handler(pmt::mp("in"),
-        boost::bind(&cc_decoder_impl::msg_handler, this, _1));      
+        boost::bind(&cc_decoder_impl::msg_handler, this, _1));
     }
 
     /*
@@ -173,27 +173,28 @@ namespace gr {
     cc_decoder_impl::msg_handler(pmt::pmt_t pmt_msg)
     {
       pmt::pmt_t msg = pmt::cdr(pmt_msg);
-      
+
       uint8_t data[d_plen];
-      
+
       size_t offset(0);
-      
+
       unsigned short checksum;
       unsigned short nBytes;
       unsigned short c;
+      int corrected;
 
       uint8_t rxBuffer[4];
       uint8_t rxPacket[d_reclen + 2]; /* plus the CRC */
       uint8_t uncodedPacket[d_uncoded_len];
 
       memcpy(data, pmt::uniform_vector_elements(msg, offset), sizeof(data));
-    
+
       #ifdef DEBUG
       std::cout << "Received data:" << std::endl;
       for(int i = 0; i < d_plen; i++)
         std::printf ("0x%02X%s" , data[i], (i % 16 == 15) ? "\n" : " ");
       std::cout << std::endl;
-      #endif 
+      #endif
 
       if (d_has_fec == true){
         uint8_t *pDecData = rxPacket;
@@ -223,7 +224,7 @@ namespace gr {
         for(int i = 0; i < d_reclen; i++)
           std::printf("0x%02X%s" , rxPacket[i], (i % 16 == 15) ? "\n" : " ");
         std::cout << std::endl;
-        #endif         
+        #endif
         if (d_has_rs == true){
           #ifdef DEBUG
           std::cout << "Goin to check CRC from received packet" << std::endl;
@@ -243,14 +244,15 @@ namespace gr {
             #endif
             d_correct += 1;
             d_correct_without_rs += 1;
-            std::cout << "Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;            
+            std::cout << "Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;
             message_port_pub(pmt::mp("out"),
               pmt::cons(pmt::PMT_NIL,
               pmt::init_u8vector((rxPacket[0]+1), rxPacket)));
           }else{
               /* decode rs */
-              if (decode_rs_message(rxPacket, d_coded_len, uncodedPacket, d_uncoded_len) == d_uncoded_len){
+              if ( (corrected = decode_rs_message(rxPacket, d_coded_len, uncodedPacket, d_uncoded_len)) != -1) {
                 /* if decode true */
+                std::cout << "Corrected bytes: " << corrected;
                 d_correct += 1;
                 d_correct_with_rs += 1;
                 std::cout << "Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;
@@ -288,21 +290,22 @@ namespace gr {
         /* copy all packet data + crc */
         if (d_has_white == true){
           xor_pn9(data, d_plen);
-        } 
+        }
         if (d_has_rs){
           memcpy(rxPacket, data, d_reclen);
-          if (decode_rs_message(rxPacket, d_coded_len, uncodedPacket, d_uncoded_len) == d_uncoded_len){
+          if ( (corrected = decode_rs_message(rxPacket, d_coded_len, uncodedPacket, d_uncoded_len)) != -1){
             /* if decode true */
+            std::cout << "Corrected bytes: " << corrected;
             d_correct += 1;
             d_correct_with_rs += 1;
-            std::cout << "Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;
+            std::cout << " Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;
             message_port_pub(pmt::mp("out"),
                 pmt::cons(pmt::PMT_NIL,
                 pmt::init_u8vector(d_uncoded_len, uncodedPacket)));
           }else{
             d_incorrect += 1;
             std::cout << "Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;
-          }          
+          }
         }else{
           memcpy(rxPacket, data, d_reclen+2);
           /* Perform checksum */
@@ -328,4 +331,3 @@ namespace gr {
     }
   } /* namespace cc_sdr */
 } /* namespace gr */
-

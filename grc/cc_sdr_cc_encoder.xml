@@ -1,7 +1,8 @@
+<?xml version="1.0"?>
 <block>
-  <name>CC encoder</name>
+  <name>cc_encoder</name>
   <key>cc_sdr_cc_encoder</key>
-  <category>CC_SDR</category>
+  <category>cc_sdr</category>
   <import>import cc_sdr</import>
   <make>cc_sdr.cc_encoder($has_fec, $has_rs, $has_white, $plen)</make>
   <param>

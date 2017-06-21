@@ -24,11 +24,11 @@ include(GrPlatform) #define LIB_SUFFIX
 
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
-
 list(APPEND cc_sdr_sources
     cc_decoder_impl.cc
     convolutional_coder.c
     rs_work.c
+    cc_encoder_impl.cc
     cc_encoder_impl.cc
 )
 
@@ -67,6 +67,7 @@ include_directories(${CPPUNIT_INCLUDE_DIRS})
 list(APPEND test_cc_sdr_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test_cc_sdr.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_cc_sdr.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_cc_encoder.cc
 )
 
 add_executable(test-cc_sdr ${test_cc_sdr_sources})
