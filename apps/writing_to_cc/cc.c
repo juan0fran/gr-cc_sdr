@@ -38,10 +38,10 @@ void receive_packet(void)
     while(1) {
         if ( (ret = read(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE) ) > 0) {
             phy_rx_count++;
+            printf("Phy layer count: %d\n", phy_rx_count);
             if(set_new_packet_to_chunk(&hchunk, &radio_packet, ll_packet.raw) > 0) {
                 if (ll_packet.fields.len == 1500) {
                     cnt_rx++;
-                    printf("Phy layer count: %d\n", phy_rx_count);
                     printf("Received a link layer packet. Count: %d\n", cnt_rx);
                     return;
                 }
@@ -115,24 +115,27 @@ int main(int argc, char *argv[])
     }
     opt = argv[1][0];
     fd = socket_init(52001);
-    if (opt == 't') {
+    if (opt == 't') {           /* packet sending */
         transmitter_work();
-    }else if (opt == 'r') {
+    }else if (opt == 'r') {     /* packet receiving */
         receiver_work(NULL);
-    }else if (opt == 'x') {
+    }else if (opt == 'x') {     /* packet retransmit */
         init_chunk_handler(&send_packet_hchunk);
         while(1) {
             receive_packet();
+            /* wait 1 second and retransmit */
+            sleep(2);
             send_packet();
+            cnt++;
+            printf("Sending packet: %d\r\n", cnt);
         }
-    }else if (opt == 'w') {
+    }else if (opt == 'w') {     /* packet send and wait */
         init_chunk_handler(&send_packet_hchunk);
         pthread_create(&thread, NULL, receiver_work, NULL);
-        while(cnt++ < 1000) {
+        while(cnt++ < 100) {
             printf("Sending packet: %d\r\n", cnt);
             send_packet();
             sleep(10);
-            //receive_packet();
         }
     }
     close(fd);

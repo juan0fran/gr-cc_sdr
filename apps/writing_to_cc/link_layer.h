@@ -15,7 +15,7 @@
 
 #include "of_reed-solomon_gf_2_m.h"
 
-#define osKernelSysTick()   (time(NULL))
+#define osKernelSysTick()           (time(NULL)*1000)
 
 #ifndef MAC_UNCODED_PACKET_SIZE
 #define MAC_UNCODED_PACKET_SIZE 	223
@@ -33,7 +33,7 @@
 #define LINK_LAYER_HEADER_SIZE 		8
 #define LINK_LAYER_PAYLOAD_SIZE		(LINK_LAYER_PACKET_SIZE - LINK_LAYER_HEADER_SIZE)
 
-#define MAC_SEQUENCE_TIMEOUT_MS		60
+#define MAC_SEQUENCE_TIMEOUT_MS		10 * 1000
 
 typedef struct link_layer_external_info_s {
 	uint32_t decoded_packets;
@@ -90,7 +90,7 @@ typedef struct __attribute__ ((__packed__)) chunk_handler_s {
 	uint8_t 		current_chunk_count;
 	uint8_t 		current_sequence;
 	uint8_t 		last_sequence;
-	uint32_t		last_chunk_time;
+	uint64_t		last_chunk_time;
 	bool 			module_initialised;
 	bool 			library_initialised;
 	llc_parms_t		llc;
