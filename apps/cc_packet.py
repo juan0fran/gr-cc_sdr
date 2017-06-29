@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Cc Packet
-# Generated: Mon Jun 12 17:05:05 2017
+# Generated: Tue Jun 27 17:18:23 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -141,52 +141,6 @@ class cc_packet(gr.top_block, Qt.QWidget):
                 taps=None,
                 fractional_bw=None,
         )
-        self.qtgui_time_sink_x_0 = qtgui.time_sink_f(
-        	1024, #size
-        	freq_comp_rate, #samp_rate
-        	"", #name
-        	1 #number of inputs
-        )
-        self.qtgui_time_sink_x_0.set_update_time(0.10)
-        self.qtgui_time_sink_x_0.set_y_axis(-5000, 5000)
-        
-        self.qtgui_time_sink_x_0.set_y_label("Amplitude", "")
-        
-        self.qtgui_time_sink_x_0.enable_tags(-1, True)
-        self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_0.enable_autoscale(False)
-        self.qtgui_time_sink_x_0.enable_grid(False)
-        self.qtgui_time_sink_x_0.enable_control_panel(False)
-        
-        if not True:
-          self.qtgui_time_sink_x_0.disable_legend()
-        
-        labels = ["", "", "", "", "",
-                  "", "", "", "", ""]
-        widths = [1, 1, 1, 1, 1,
-                  1, 1, 1, 1, 1]
-        colors = ["blue", "red", "green", "black", "cyan",
-                  "magenta", "yellow", "dark red", "dark green", "blue"]
-        styles = [1, 1, 1, 1, 1,
-                  1, 1, 1, 1, 1]
-        markers = [-1, -1, -1, -1, -1,
-                   -1, -1, -1, -1, -1]
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-                  1.0, 1.0, 1.0, 1.0, 1.0]
-        
-        for i in xrange(1):
-            if len(labels[i]) == 0:
-                self.qtgui_time_sink_x_0.set_line_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_time_sink_x_0.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_0.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_0.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_0.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_0.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_0.set_line_alpha(i, alphas[i])
-        
-        self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
         self.qtgui_sink_x_0_0 = qtgui.sink_c(
         	1024, #fftsize
         	firdes.WIN_BLACKMAN_hARRIS, #wintype
@@ -225,6 +179,37 @@ class cc_packet(gr.top_block, Qt.QWidget):
         
         
           
+        self.qtgui_number_sink_1 = qtgui.number_sink(
+            gr.sizeof_float,
+            0,
+            qtgui.NUM_GRAPH_HORIZ,
+            1
+        )
+        self.qtgui_number_sink_1.set_update_time(0.10)
+        self.qtgui_number_sink_1.set_title("")
+        
+        labels = ["Frequency Shift", "", "", "", "",
+                  "", "", "", "", ""]
+        units = ["Hz", "", "", "", "",
+                 "", "", "", "", ""]
+        colors = [("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"),
+                  ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black"), ("black", "black")]
+        factor = [1, 1, 1, 1, 1,
+                  1, 1, 1, 1, 1]
+        for i in xrange(1):
+            self.qtgui_number_sink_1.set_min(i, -5000)
+            self.qtgui_number_sink_1.set_max(i, 5000)
+            self.qtgui_number_sink_1.set_color(i, colors[i][0], colors[i][1])
+            if len(labels[i]) == 0:
+                self.qtgui_number_sink_1.set_label(i, "Data {0}".format(i))
+            else:
+                self.qtgui_number_sink_1.set_label(i, labels[i])
+            self.qtgui_number_sink_1.set_unit(i, units[i])
+            self.qtgui_number_sink_1.set_factor(i, factor[i])
+        
+        self.qtgui_number_sink_1.enable_autoscale(False)
+        self._qtgui_number_sink_1_win = sip.wrapinstance(self.qtgui_number_sink_1.pyqwidget(), Qt.QWidget)
+        self.top_layout.addWidget(self._qtgui_number_sink_1_win)
         self.qtgui_number_sink_0 = qtgui.number_sink(
             gr.sizeof_float,
             0,
@@ -294,7 +279,16 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self.blocks_nlog10_ff_0_0 = blocks.nlog10_ff(10, 1, -56)
         self.blocks_nlog10_ff_0 = blocks.nlog10_ff(10, 1, -56 - 40.79)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vff((15278.876454, ))
-        self.blocks_moving_average_xx_0 = blocks.moving_average_ff(40000, 1/40000.0, 40000)
+        self.blocks_moving_average_xx_0_0 = blocks.moving_average_ff(48000, 1/48000.0, 48000)
+        self.blocks_moving_average_xx_0 = blocks.moving_average_ff(24000, 1/24000.0, 24000)
+        self.blocks_keep_m_in_n_0_0 = blocks.keep_m_in_n(gr.sizeof_int, 1, 2000, 0)
+        self.blocks_keep_m_in_n_0 = blocks.keep_m_in_n(gr.sizeof_int, 1, 1000, 0)
+        self.blocks_float_to_int_0_0 = blocks.float_to_int(1, 1000)
+        self.blocks_float_to_int_0 = blocks.float_to_int(1, 1000)
+        self.blocks_file_sink_0_0 = blocks.file_sink(gr.sizeof_int*1, "freq_estimation.float", False)
+        self.blocks_file_sink_0_0.set_unbuffered(False)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_int*1, "power_received.float", False)
+        self.blocks_file_sink_0.set_unbuffered(False)
         self.blocks_complex_to_mag_squared_0 = blocks.complex_to_mag_squared(1)
 
         ##################################################
@@ -305,10 +299,17 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self.msg_connect((self.cc_sdr_cc_decoder_0, 'out'), (self.blocks_socket_pdu_0_0, 'pdus'))    
         self.msg_connect((self.cc_sdr_cc_encoder_0, 'out'), (self.blocks_pdu_to_tagged_stream_0, 'pdus'))    
         self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.blocks_moving_average_xx_0, 0))    
+        self.connect((self.blocks_float_to_int_0, 0), (self.blocks_keep_m_in_n_0_0, 0))    
+        self.connect((self.blocks_float_to_int_0_0, 0), (self.blocks_keep_m_in_n_0, 0))    
+        self.connect((self.blocks_keep_m_in_n_0, 0), (self.blocks_file_sink_0, 0))    
+        self.connect((self.blocks_keep_m_in_n_0_0, 0), (self.blocks_file_sink_0_0, 0))    
         self.connect((self.blocks_moving_average_xx_0, 0), (self.blocks_nlog10_ff_0, 0))    
         self.connect((self.blocks_moving_average_xx_0, 0), (self.blocks_nlog10_ff_0_0, 0))    
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.qtgui_time_sink_x_0, 0))    
+        self.connect((self.blocks_moving_average_xx_0_0, 0), (self.blocks_float_to_int_0, 0))    
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_moving_average_xx_0_0, 0))    
+        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.qtgui_number_sink_1, 0))    
         self.connect((self.blocks_nlog10_ff_0, 0), (self.qtgui_number_sink_0, 0))    
+        self.connect((self.blocks_nlog10_ff_0_0, 0), (self.blocks_float_to_int_0_0, 0))    
         self.connect((self.blocks_nlog10_ff_0_0, 0), (self.qtgui_number_sink_0, 1))    
         self.connect((self.blocks_pdu_to_tagged_stream_0, 0), (self.blocks_tagged_stream_multiply_length_0, 0))    
         self.connect((self.blocks_tagged_stream_multiply_length_0, 0), (self.digital_gfsk_mod_1, 0))    
@@ -427,7 +428,6 @@ class cc_packet(gr.top_block, Qt.QWidget):
     def set_freq_comp_rate(self, freq_comp_rate):
         self.freq_comp_rate = freq_comp_rate
         self.freq_xlating_fir_filter_xxx_1.set_taps((firdes.low_pass(1, self.freq_comp_rate, self.rate*0.625, self.rate/20.0)))
-        self.qtgui_time_sink_x_0.set_samp_rate(self.freq_comp_rate)
 
     def get_fll_bw(self):
         return self.fll_bw
