@@ -159,7 +159,7 @@ namespace gr {
 
        uint8_t data_in[d_uncoded_len];
        uint8_t data_rs_out[d_coded_len + d_preamble_count + 4];
-       uint8_t data_out[d_plen];
+       uint8_t data_out[d_plen + d_preamble_count + 4];
 
        int corrected;
        unsigned short checksum;
@@ -213,10 +213,11 @@ namespace gr {
          for (idx = 0; idx < d_preamble_count - 4; idx++){
            data_rs_out[idx] = 0xAA;
          }
-         data_rs_out[idx++] = 0xD3;
-         data_rs_out[idx++] = 0x91;
-         data_rs_out[idx++] = 0xD3;
-         data_rs_out[idx++] = 0x91;
+
+         data_rs_out[idx++] = 0xD2;
+         data_rs_out[idx++] = 0x59;
+         data_rs_out[idx++] = 0xD2;
+         data_rs_out[idx++] = 0x59;
 
          data_rs_out[d_plen + d_preamble_count + 4 - 4 + 1] = 0xAA;
          data_rs_out[d_plen + d_preamble_count + 4 - 4 + 2] = 0xAA;
@@ -229,7 +230,7 @@ namespace gr {
 
        /* a message is composed by 1B length + (up to) 222B payload, if less, padded */
        std::printf("Message size: %d\n", msg_size);
-       if ((msg_size - 1) != data_in[0]){
+       /*if ((msg_size - 1) != data_in[0]){
          if (msg_size < (d_uncoded_len-1)){
            for (int i = msg_size; i > 0; i--){
              data_in[i] = data_in[i - 1];
@@ -239,21 +240,31 @@ namespace gr {
            std::printf("Error occured, first byte must indicate packet size\n");
            return;
          }
+     }*/
+        data_in[0] = 0x00;
+        memset(data_in+1, 0x44, d_uncoded_len-1);
+       if (d_has_rs == true) {
+           if (encode_rs_message(data_in, d_uncoded_len, data_rs_out, d_coded_len) != d_coded_len){
+             std::printf("Encode RS failed\n");
+             return;
+           }
+       }else {
+           memcpy(data_rs_out, data_in, d_coded_len);
        }
-       if (encode_rs_message(data_in, d_uncoded_len, data_rs_out, d_coded_len) != d_coded_len){
-         std::printf("Encode RS failed\n");
-         return;
-       }
+
        checksum = 0xFFFF;
        // Init value for CRC calculation
        /* Go from d_reclen+2, which is the received length plus the CRC */
        for (int i = 0; i < d_coded_len; i++){
            checksum = calcCRC(data_rs_out[i], checksum);
        }
+       /*
        std::cout << "Send data:" << std::endl;
        for(int i = 0; i < d_plen; i++)
          std::printf ("0x%02X%s" , data_rs_out[i], (i % 16 == 15) ? "\n" : " ");
        std::cout << std::endl;
+       */
+
        data_rs_out[d_coded_len] = checksum >> 8;
        data_rs_out[d_coded_len + 1] = checksum & 0x00FF;
        /* Now we have at data_rs_out a RS encoded 255,223 message plus 2 bytes of CRC */
@@ -266,10 +277,30 @@ namespace gr {
            std::printf("Sizes of RS or FEC are not consistent\n");
            return;
          }
-       }
+     }else{
+         memcpy(data_out, data_rs_out, d_coded_len + 2);
+     }
+
+      for (int i = d_plen; i >= 0; i--)
+        data_out[i + d_preamble_count + 4 - 4] = data_out[i];
+
+      int idx = 0;
+
+      for (idx = 0; idx < d_preamble_count - 4; idx++){
+        data_out[idx] = 0xAA;
+      }
+
+      data_out[idx++] = 0xD2;
+      data_out[idx++] = 0x59;
+      data_out[idx++] = 0xD2;
+      data_out[idx++] = 0x59;
+
+      data_out[d_plen + d_preamble_count + 4 - 4 + 1] = 0xAA;
+      data_out[d_plen + d_preamble_count + 4 - 4 + 2] = 0xAA;
+
        message_port_pub(pmt::mp("out"),
              pmt::cons(pmt::PMT_NIL,
-             pmt::init_u8vector(d_plen, data_rs_out)));
+             pmt::init_u8vector(d_plen + d_preamble_count + 4, data_out)));
      }
 
      bool

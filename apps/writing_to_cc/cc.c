@@ -5,7 +5,7 @@
 #define BLIND_TEST_DURATION         1000
 #define RETRANSMIT_TEST_DURATION    500
 
-uint8_t cmp_buffer[1500];
+uint8_t cmp_buffer[1740];
 
 static int fd;
 
@@ -21,9 +21,9 @@ void send_packet(void)
     link_layer_packet_t ll_packet;
     radio_packet_t radio_packet;
     ll_packet.fields.attribs = 9600;
-    ll_packet.fields.len = 1500;
+    ll_packet.fields.len = 1740;
     ll_packet.fields.crc = 0;
-    for (i = 0; i < 1500; i++) {
+    for (i = 0; i < 1740; i++) {
         ll_packet.fields.payload[i] = i % 256;
     }
     /* Init done */
@@ -32,7 +32,7 @@ void send_packet(void)
         write(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE);
     }
     write(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE);
-    phy_tx_count += 11;
+    phy_tx_count += 12;
     printf("Total physical layer transmitter packets: %d\n", phy_tx_count);
 }
 
@@ -47,7 +47,7 @@ void receive_packet(void)
         if ( (ret = read(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE) ) > 0) {
             phy_rx_count++;
             if(set_new_packet_to_chunk(&hchunk, &radio_packet, ll_packet.raw) > 0) {
-                if (ll_packet.fields.len == 1500) {
+                if (ll_packet.fields.len == 1740) {
                     cnt_rx++;
                     printf("Total physical layer received count: %d\n", phy_rx_count);
                     printf("Received a link layer packet. Count: %d\n", cnt_rx);
@@ -67,7 +67,7 @@ void * receiver_work(void *args)
     int phy_rx_count = 0;
     init_chunk_handler(&hchunk);
     int cnt = 0;
-    for (i = 0; i < 1500; i++) {
+    for (i = 0; i < 1740; i++) {
         cmp_buffer[i] = i % 256;
     }
     /* Init done */
@@ -76,7 +76,7 @@ void * receiver_work(void *args)
     if ( (ret = read(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE) ) > 0) {
             phy_rx_count++;
             if(set_new_packet_to_chunk(&hchunk, &radio_packet, ll_packet.raw) > 0) {
-                if (ll_packet.fields.len == 1500) {
+                if (ll_packet.fields.len == 1740) {
                     cnt++;
                     printf("Total physical layer received count: %d\n", phy_rx_count);
                     printf("Received a link layer packet. Count: %d\n", cnt);
@@ -95,9 +95,9 @@ void transmitter_work(void)
     int cnt;
     int i;
     ll_packet.fields.attribs = 9600;
-    ll_packet.fields.len = 1500;
+    ll_packet.fields.len = 1740;
     ll_packet.fields.crc = 0;
-    for (i = 0; i < 1500; i++) {
+    for (i = 0; i < 1740; i++) {
         ll_packet.fields.payload[i] = i % 256;
     }
     /* Init done */
@@ -109,7 +109,7 @@ void transmitter_work(void)
             write(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE);
         }
         write(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE);
-        phy_tx_count += 11;
+        phy_tx_count += 12;
         printf("Total physical layer transmitter packets: %d\n", phy_tx_count);
         cnt++;
         printf("Sending packet: %d\n", cnt);

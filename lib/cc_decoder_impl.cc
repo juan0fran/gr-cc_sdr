@@ -225,7 +225,7 @@ namespace gr {
           std::printf("0x%02X%s" , rxPacket[i], (i % 16 == 15) ? "\n" : " ");
         std::cout << std::endl;
         #endif
-        if (d_has_rs == true){
+        if (d_has_rs == true) {
           #ifdef DEBUG
           std::cout << "Goin to check CRC from received packet" << std::endl;
           #endif
@@ -291,6 +291,14 @@ namespace gr {
         if (d_has_white == true){
           xor_pn9(data, d_plen);
         }
+
+        #ifdef DEBUG
+        std::cout << "Received data (dewhite):" << std::endl;
+        for(int i = 0; i < d_plen; i++)
+          std::printf ("%c%s" , data[i], (i % 16 == 15) ? "\n" : " ");
+        std::cout << std::endl;
+        #endif
+
         if (d_has_rs){
           memcpy(rxPacket, data, d_reclen);
           if ( (corrected = decode_rs_message(rxPacket, d_coded_len, uncodedPacket, d_uncoded_len)) != -1){
@@ -306,13 +314,13 @@ namespace gr {
             d_incorrect += 1;
             std::cout << "Ok decoded: " << d_correct << " With RS: " << d_correct_with_rs << " Without RS: " << d_correct_without_rs << " Incorrect: " << d_incorrect << " Timer: " << time(NULL) << std::endl;
           }
-        }else{
+        } else {
           memcpy(rxPacket, data, d_reclen+2);
           /* Perform checksum */
           checksum = 0xFFFF;
           // Init value for CRC calculation
           /* Go from d_reclen+2, which is the received length plus the CRC */
-          for (int i = 0; i < (d_reclen + 2); i++){
+          for (int i = 0; i < (d_reclen + 2); i++) {
               checksum = calcCRC(rxPacket[i], checksum);
           }
           /* if the previous calculous is 0, then CRC ok */
@@ -324,7 +332,9 @@ namespace gr {
             std::cout << "Ok decoded: " << d_correct << " Timer: " << time(NULL) << std::endl;
             message_port_pub(pmt::mp("out"),
               pmt::cons(pmt::PMT_NIL,
-              pmt::init_u8vector((rxPacket[0]+1), rxPacket)));
+              pmt::init_u8vector(d_reclen, rxPacket)));
+          }else{
+              std::cout << "BAD CRC" << std::endl;
           }
         }
       }

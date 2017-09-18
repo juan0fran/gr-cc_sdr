@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Cc Packet
-# Generated: Tue Jul 25 09:03:54 2017
+# Generated: Mon Sep 18 10:41:11 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -73,8 +73,8 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self.sps = sps = 5
         self.source_rate = source_rate = 480e3
         self.samp_rate = samp_rate = 48e3
-        self.qt_gui_freq_rx = qt_gui_freq_rx = 433.92
-        self.qt_gui_freq = qt_gui_freq = 434.92
+        self.qt_gui_freq_rx = qt_gui_freq_rx = 437.25
+        self.qt_gui_freq = qt_gui_freq = 437.25
         self.preamble = preamble = '101010101010101010101010101010'
         self.packet_length = packet_length = 255
         self.offset_rx = offset_rx = 0
@@ -277,16 +277,7 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self.blocks_nlog10_ff_0_0 = blocks.nlog10_ff(10, 1, -56)
         self.blocks_nlog10_ff_0 = blocks.nlog10_ff(10, 1, -56 - 40.79)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vff((15278.876454, ))
-        self.blocks_moving_average_xx_0_0 = blocks.moving_average_ff(48000, 1/48000.0, 48000)
         self.blocks_moving_average_xx_0 = blocks.moving_average_ff(24000, 1/24000.0, 24000)
-        self.blocks_keep_m_in_n_0_0 = blocks.keep_m_in_n(gr.sizeof_int, 1, 2000, 0)
-        self.blocks_keep_m_in_n_0 = blocks.keep_m_in_n(gr.sizeof_int, 1, 1000, 0)
-        self.blocks_float_to_int_0_0 = blocks.float_to_int(1, 1000)
-        self.blocks_float_to_int_0 = blocks.float_to_int(1, 1000)
-        self.blocks_file_sink_0_0 = blocks.file_sink(gr.sizeof_int*1, "freq_estimation.float", False)
-        self.blocks_file_sink_0_0.set_unbuffered(False)
-        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_int*1, "power_received.float", False)
-        self.blocks_file_sink_0.set_unbuffered(False)
         self.blocks_complex_to_mag_squared_0 = blocks.complex_to_mag_squared(1)
 
         ##################################################
@@ -297,17 +288,10 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self.msg_connect((self.cc_sdr_cc_decoder_0, 'out'), (self.blocks_socket_pdu_0_0, 'pdus'))    
         self.msg_connect((self.cc_sdr_cc_encoder_0, 'out'), (self.blocks_pdu_to_tagged_stream_0, 'pdus'))    
         self.connect((self.blocks_complex_to_mag_squared_0, 0), (self.blocks_moving_average_xx_0, 0))    
-        self.connect((self.blocks_float_to_int_0, 0), (self.blocks_keep_m_in_n_0_0, 0))    
-        self.connect((self.blocks_float_to_int_0_0, 0), (self.blocks_keep_m_in_n_0, 0))    
-        self.connect((self.blocks_keep_m_in_n_0, 0), (self.blocks_file_sink_0, 0))    
-        self.connect((self.blocks_keep_m_in_n_0_0, 0), (self.blocks_file_sink_0_0, 0))    
         self.connect((self.blocks_moving_average_xx_0, 0), (self.blocks_nlog10_ff_0, 0))    
         self.connect((self.blocks_moving_average_xx_0, 0), (self.blocks_nlog10_ff_0_0, 0))    
-        self.connect((self.blocks_moving_average_xx_0_0, 0), (self.blocks_float_to_int_0, 0))    
-        self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_moving_average_xx_0_0, 0))    
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.qtgui_number_sink_1, 0))    
         self.connect((self.blocks_nlog10_ff_0, 0), (self.qtgui_number_sink_0, 0))    
-        self.connect((self.blocks_nlog10_ff_0_0, 0), (self.blocks_float_to_int_0_0, 0))    
         self.connect((self.blocks_nlog10_ff_0_0, 0), (self.qtgui_number_sink_0, 1))    
         self.connect((self.blocks_pdu_to_tagged_stream_0, 0), (self.blocks_tagged_stream_multiply_length_0, 0))    
         self.connect((self.blocks_tagged_stream_multiply_length_0, 0), (self.digital_gmsk_mod_0, 0))    
@@ -380,9 +364,9 @@ class cc_packet(gr.top_block, Qt.QWidget):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
+        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, self.rate * 1.0, 1e3, firdes.WIN_HAMMING, 6.76))
         self.low_pass_filter_0_0.set_taps(firdes.low_pass(1, self.source_rate, self.samp_rate/2.0, self.samp_rate/20.0, firdes.WIN_HAMMING, 6.76))
         self.qtgui_sink_x_0.set_frequency_range(0, self.samp_rate)
-        self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, self.rate * 1.0, 1e3, firdes.WIN_HAMMING, 6.76))
         self.qtgui_sink_x_0_0.set_frequency_range(0, self.samp_rate)
 
     def get_qt_gui_freq_rx(self):
@@ -398,8 +382,8 @@ class cc_packet(gr.top_block, Qt.QWidget):
 
     def set_qt_gui_freq(self, qt_gui_freq):
         self.qt_gui_freq = qt_gui_freq
-        Qt.QMetaObject.invokeMethod(self._qt_gui_freq_line_edit, "setText", Qt.Q_ARG("QString", eng_notation.num_to_str(self.qt_gui_freq)))
         self.uhd_usrp_sink_0.set_center_freq(self.qt_gui_freq*1e6, 0)
+        Qt.QMetaObject.invokeMethod(self._qt_gui_freq_line_edit, "setText", Qt.Q_ARG("QString", eng_notation.num_to_str(self.qt_gui_freq)))
 
     def get_preamble(self):
         return self.preamble
