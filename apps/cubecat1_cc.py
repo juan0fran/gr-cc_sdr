@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 ##################################################
 # GNU Radio Python Flow Graph
-# Title: Cc Packet
-# Generated: Wed Sep 27 13:05:20 2017
+# Title: Cubecat1 Cc
+# Generated: Wed Sep 27 12:07:36 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -35,12 +35,12 @@ import sys
 import time
 
 
-class cc_packet(gr.top_block, Qt.QWidget):
+class cubecat1_cc(gr.top_block, Qt.QWidget):
 
     def __init__(self, filter_width=96e3, rate=9600):
-        gr.top_block.__init__(self, "Cc Packet")
+        gr.top_block.__init__(self, "Cubecat1 Cc")
         Qt.QWidget.__init__(self)
-        self.setWindowTitle("Cc Packet")
+        self.setWindowTitle("Cubecat1 Cc")
         try:
             self.setWindowIcon(Qt.QIcon.fromTheme('gnuradio-grc'))
         except:
@@ -57,7 +57,7 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self.top_grid_layout = Qt.QGridLayout()
         self.top_layout.addLayout(self.top_grid_layout)
 
-        self.settings = Qt.QSettings("GNU Radio", "cc_packet")
+        self.settings = Qt.QSettings("GNU Radio", "cubecat1_cc")
         self.restoreGeometry(self.settings.value("geometry").toByteArray())
 
         ##################################################
@@ -73,12 +73,13 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self.sps = sps = 5
         self.source_rate = source_rate = 480e3
         self.samp_rate = samp_rate = 48e3
+        self.rs = rs = 1
         self.raw_length = raw_length = 255
-        self.qt_gui_freq_rx = qt_gui_freq_rx = 437.25
-        self.qt_gui_freq = qt_gui_freq = 437.25
+        self.qt_gui_freq_rx = qt_gui_freq_rx = 437.250
+        self.qt_gui_freq = qt_gui_freq = 434.92
         self.preamble = preamble = '101010101010101010101010101010'
         self.packet_length = packet_length = 223
-        self.offset_rx = offset_rx = 0
+        self.offset_rx = offset_rx = 37000
         self.freq_comp_rate = freq_comp_rate = 96e3
         self.fll_bw = fll_bw = 40
         self.fec = fec = 0
@@ -101,7 +102,7 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self._qt_gui_freq_line_edit.returnPressed.connect(
         	lambda: self.set_qt_gui_freq(eng_notation.str_to_num(str(self._qt_gui_freq_line_edit.text().toAscii()))))
         self.top_layout.addWidget(self._qt_gui_freq_tool_bar)
-        self._offset_rx_range = Range(-100e3, 100e3, 1e3, 0, 200)
+        self._offset_rx_range = Range(-100e3, 100e3, 1e3, 37000, 200)
         self._offset_rx_win = RangeWidget(self._offset_rx_range, self.set_offset_rx, "Offset RX", "counter_slider", float)
         self.top_layout.addWidget(self._offset_rx_win)
         self._fll_bw_range = Range(5, 500, 5, 40, 200)
@@ -127,8 +128,8 @@ class cc_packet(gr.top_block, Qt.QWidget):
         	"packet_len",
         )
         self.uhd_usrp_sink_0.set_samp_rate(source_rate)
-        self.uhd_usrp_sink_0.set_center_freq(qt_gui_freq*1e6, 0)
-        self.uhd_usrp_sink_0.set_gain(77.5, 0)
+        self.uhd_usrp_sink_0.set_center_freq(qt_gui_freq*1e6 - offset_rx, 0)
+        self.uhd_usrp_sink_0.set_gain(76, 0)
         self.uhd_usrp_sink_0.set_antenna("TX/RX", 0)
         self.rational_resampler_xxx_0_0 = filter.rational_resampler_ccc(
                 interpolation=int(freq_comp_rate),
@@ -142,11 +143,30 @@ class cc_packet(gr.top_block, Qt.QWidget):
                 taps=None,
                 fractional_bw=None,
         )
-        self.qtgui_sink_x_1 = qtgui.sink_c(
+        self.qtgui_sink_x_1_0 = qtgui.sink_c(
         	1024, #fftsize
         	firdes.WIN_BLACKMAN_hARRIS, #wintype
         	0, #fc
         	source_rate, #bw
+        	"", #name
+        	True, #plotfreq
+        	True, #plotwaterfall
+        	True, #plottime
+        	True, #plotconst
+        )
+        self.qtgui_sink_x_1_0.set_update_time(1.0/10)
+        self._qtgui_sink_x_1_0_win = sip.wrapinstance(self.qtgui_sink_x_1_0.pyqwidget(), Qt.QWidget)
+        self.top_layout.addWidget(self._qtgui_sink_x_1_0_win)
+        
+        self.qtgui_sink_x_1_0.enable_rf_freq(False)
+        
+        
+          
+        self.qtgui_sink_x_1 = qtgui.sink_c(
+        	1024, #fftsize
+        	firdes.WIN_BLACKMAN_hARRIS, #wintype
+        	0, #fc
+        	96000, #bw
         	"", #name
         	True, #plotfreq
         	True, #plotwaterfall
@@ -158,25 +178,6 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self.top_layout.addWidget(self._qtgui_sink_x_1_win)
         
         self.qtgui_sink_x_1.enable_rf_freq(False)
-        
-        
-          
-        self.qtgui_sink_x_0_0 = qtgui.sink_c(
-        	1024, #fftsize
-        	firdes.WIN_BLACKMAN_hARRIS, #wintype
-        	0, #fc
-        	samp_rate, #bw
-        	"", #name
-        	True, #plotfreq
-        	True, #plotwaterfall
-        	True, #plottime
-        	True, #plotconst
-        )
-        self.qtgui_sink_x_0_0.set_update_time(1.0/10)
-        self._qtgui_sink_x_0_0_win = sip.wrapinstance(self.qtgui_sink_x_0_0.pyqwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_sink_x_0_0_win)
-        
-        self.qtgui_sink_x_0_0.enable_rf_freq(False)
         
         
           
@@ -284,7 +285,7 @@ class cc_packet(gr.top_block, Qt.QWidget):
         )
         self.digital_fll_band_edge_cc_0 = digital.fll_band_edge_cc(freq_comp_rate / rate, 0.35, 44, fll_bw*1e-3)
         self.digital_correlate_access_code_tag_bb_0_0 = digital.correlate_access_code_tag_bb(access_code, threshold, "syncword")
-        self.cc_sdr_fixedlen_packet_synchronizer_0 = cc_sdr.fixedlen_packet_synchronizer("syncword", "packet_len", (raw_length +  fec*(raw_length + 8)) * 8, numpy.byte)
+        self.cc_sdr_fixedlen_packet_synchronizer_0 = cc_sdr.fixedlen_packet_synchronizer("syncword", "packet_len", (raw_length + (1-rs)*2 +  fec*(raw_length + 8)) * 8, numpy.byte)
         self.cc_sdr_cc_encoder_0 = cc_sdr.cc_encoder(False, True, True, 223)
         self.cc_sdr_cc_decoder_0 = cc_sdr.cc_decoder(False, True, True, packet_length)
         self.blocks_unpacked_to_packed_xx_0_0 = blocks.unpacked_to_packed_bb(1, gr.GR_MSB_FIRST)
@@ -297,7 +298,7 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self.blocks_nlog10_ff_0_0 = blocks.nlog10_ff(10, 1, -56)
         self.blocks_nlog10_ff_0 = blocks.nlog10_ff(10, 1, -56 - 40.79)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_vff((15278.876454, ))
-        self.blocks_moving_average_xx_0 = blocks.moving_average_ff(12000, 1/12000.0, 12000)
+        self.blocks_moving_average_xx_0 = blocks.moving_average_ff(24000, 1/24000.0, 24000)
         self.blocks_complex_to_mag_squared_0 = blocks.complex_to_mag_squared(1)
 
         ##################################################
@@ -329,16 +330,16 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self.connect((self.freq_xlating_fir_filter_xxx_1, 0), (self.blocks_complex_to_mag_squared_0, 0))    
         self.connect((self.freq_xlating_fir_filter_xxx_1, 0), (self.digital_gmsk_demod_0, 0))    
         self.connect((self.freq_xlating_fir_filter_xxx_1, 0), (self.qtgui_sink_x_0, 0))    
-        self.connect((self.low_pass_filter_0, 0), (self.qtgui_sink_x_0_0, 0))    
         self.connect((self.low_pass_filter_0, 0), (self.rational_resampler_xxx_0, 0))    
         self.connect((self.low_pass_filter_0_0, 0), (self.uhd_usrp_sink_0, 0))    
         self.connect((self.rational_resampler_xxx_0, 0), (self.low_pass_filter_0_0, 0))    
         self.connect((self.rational_resampler_xxx_0_0, 0), (self.digital_fll_band_edge_cc_0, 0))    
+        self.connect((self.rational_resampler_xxx_0_0, 0), (self.qtgui_sink_x_1, 0))    
         self.connect((self.uhd_usrp_source_0, 0), (self.freq_xlating_fir_filter_xxx_0, 0))    
-        self.connect((self.uhd_usrp_source_0, 0), (self.qtgui_sink_x_1, 0))    
+        self.connect((self.uhd_usrp_source_0, 0), (self.qtgui_sink_x_1_0, 0))    
 
     def closeEvent(self, event):
-        self.settings = Qt.QSettings("GNU Radio", "cc_packet")
+        self.settings = Qt.QSettings("GNU Radio", "cubecat1_cc")
         self.settings.setValue("geometry", self.saveGeometry())
         event.accept()
 
@@ -377,9 +378,9 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self.source_rate = source_rate
         self.freq_xlating_fir_filter_xxx_0.set_taps((firdes.low_pass(1, self.source_rate, self.filter_width/2.0, self.filter_width/20.0)))
         self.low_pass_filter_0_0.set_taps(firdes.low_pass(1, self.source_rate, self.samp_rate/2.0, self.samp_rate/20.0, firdes.WIN_HAMMING, 6.76))
+        self.qtgui_sink_x_1_0.set_frequency_range(0, self.source_rate)
         self.uhd_usrp_sink_0.set_samp_rate(self.source_rate)
         self.uhd_usrp_source_0.set_samp_rate(self.source_rate)
-        self.qtgui_sink_x_1.set_frequency_range(0, self.source_rate)
 
     def get_samp_rate(self):
         return self.samp_rate
@@ -389,7 +390,12 @@ class cc_packet(gr.top_block, Qt.QWidget):
         self.low_pass_filter_0.set_taps(firdes.low_pass(1, self.samp_rate, self.rate * 1.0, 1e3, firdes.WIN_HAMMING, 6.76))
         self.low_pass_filter_0_0.set_taps(firdes.low_pass(1, self.source_rate, self.samp_rate/2.0, self.samp_rate/20.0, firdes.WIN_HAMMING, 6.76))
         self.qtgui_sink_x_0.set_frequency_range(0, self.samp_rate)
-        self.qtgui_sink_x_0_0.set_frequency_range(0, self.samp_rate)
+
+    def get_rs(self):
+        return self.rs
+
+    def set_rs(self, rs):
+        self.rs = rs
 
     def get_raw_length(self):
         return self.raw_length
@@ -411,7 +417,7 @@ class cc_packet(gr.top_block, Qt.QWidget):
     def set_qt_gui_freq(self, qt_gui_freq):
         self.qt_gui_freq = qt_gui_freq
         Qt.QMetaObject.invokeMethod(self._qt_gui_freq_line_edit, "setText", Qt.Q_ARG("QString", eng_notation.num_to_str(self.qt_gui_freq)))
-        self.uhd_usrp_sink_0.set_center_freq(self.qt_gui_freq*1e6, 0)
+        self.uhd_usrp_sink_0.set_center_freq(self.qt_gui_freq*1e6 - self.offset_rx, 0)
 
     def get_preamble(self):
         return self.preamble
@@ -431,6 +437,7 @@ class cc_packet(gr.top_block, Qt.QWidget):
     def set_offset_rx(self, offset_rx):
         self.offset_rx = offset_rx
         self.freq_xlating_fir_filter_xxx_0.set_center_freq(50e3 - self.offset_rx)
+        self.uhd_usrp_sink_0.set_center_freq(self.qt_gui_freq*1e6 - self.offset_rx, 0)
 
     def get_freq_comp_rate(self):
         return self.freq_comp_rate
@@ -470,7 +477,7 @@ def argument_parser():
     return parser
 
 
-def main(top_block_cls=cc_packet, options=None):
+def main(top_block_cls=cubecat1_cc, options=None):
     if options is None:
         options, _ = argument_parser().parse_args()
 

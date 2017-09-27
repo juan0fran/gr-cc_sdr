@@ -27,11 +27,13 @@ void send_packet(void)
         ll_packet.fields.payload[i] = i % 256;
     }
     /* Init done */
+    
     while (get_new_packet_from_chunk(&send_packet_hchunk, ll_packet.raw, (ll_packet.fields.len + LINK_LAYER_HEADER_SIZE),
                                                     4, &radio_packet) > 0) {
         write(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE);
     }
     write(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE);
+
     phy_tx_count += 12;
     printf("Total physical layer transmitter packets: %d\n", phy_tx_count);
 }

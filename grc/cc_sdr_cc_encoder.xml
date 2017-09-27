@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <block>
-  <name>cc_encoder</name>
+  <name>CC Encoder</name>
   <key>cc_sdr_cc_encoder</key>
-  <category>cc_sdr</category>
+  <category>CC_SDR</category>
   <import>import cc_sdr</import>
   <make>cc_sdr.cc_encoder($has_fec, $has_rs, $has_white, $plen)</make>
   <param>
@@ -30,7 +30,7 @@
        <name>No</name>
        <key>False</key>
      </option>
-  </param>  
+  </param>
   <param>
     <name>Whitening</name>
     <key>has_white</key>
@@ -43,7 +43,7 @@
        <name>No</name>
        <key>False</key>
      </option>
-  </param>   
+  </param>
   <param>
     <name>Plen</name>
     <key>plen</key>

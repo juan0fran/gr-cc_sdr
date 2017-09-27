@@ -1,5 +1,5 @@
 <block>
-  <name>CC decoder</name>
+  <name>CC Decoder</name>
   <key>cc_sdr_cc_decoder</key>
   <category>CC_SDR</category>
   <import>import cc_sdr</import>
@@ -29,7 +29,7 @@
        <name>No</name>
        <key>False</key>
      </option>
-  </param>  
+  </param>
   <param>
     <name>Whitening</name>
     <key>has_white</key>
@@ -42,7 +42,7 @@
        <name>No</name>
        <key>False</key>
      </option>
-  </param>   
+  </param>
   <param>
     <name>Plen</name>
     <key>plen</key>
