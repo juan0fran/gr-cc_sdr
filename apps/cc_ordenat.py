@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Cc Ordenat
-# Generated: Wed Sep 27 17:07:20 2017
+# Generated: Wed Oct  4 09:01:05 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -67,9 +67,14 @@ class cc_ordenat(gr.top_block, Qt.QWidget):
         ##################################################
         self.samp_rate = samp_rate = 480e3
         self.perm_offset = perm_offset = 50e3
-        self.lo_offset = lo_offset = 12e3
+        self.lo_offset = lo_offset = 50e3
         self.freq_tx = freq_tx = 437.25e6
         self.freq_rx = freq_rx = 437.25e6
+
+        ##################################################
+        # Message Queues
+        ##################################################
+        uhd_amsg_source_0_msgq_out = blocks_message_source_0_msgq_in = gr.msg_queue(2)
 
         ##################################################
         # Blocks
@@ -97,8 +102,9 @@ class cc_ordenat(gr.top_block, Qt.QWidget):
         )
         self.uhd_usrp_sink_0.set_samp_rate(samp_rate)
         self.uhd_usrp_sink_0.set_center_freq(uhd.tune_request(freq_tx, lo_offset), 0)
-        self.uhd_usrp_sink_0.set_gain(60, 0)
+        self.uhd_usrp_sink_0.set_gain(77.5, 0)
         self.uhd_usrp_sink_0.set_antenna("TX/RX", 0)
+        self.uhd_amsg_source_0 = uhd.amsg_source(device_addr="", msgq=uhd_amsg_source_0_msgq_out)
         self.qtgui_sink_x_0 = qtgui.sink_c(
         	1024, #fftsize
         	firdes.WIN_BLACKMAN_hARRIS, #wintype
@@ -180,9 +186,13 @@ class cc_ordenat(gr.top_block, Qt.QWidget):
         self.qtgui_number_sink_0.enable_autoscale(False)
         self._qtgui_number_sink_0_win = sip.wrapinstance(self.qtgui_number_sink_0.pyqwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_number_sink_0_win)
-        self.blocks_socket_pdu_0_0_0_0 = blocks.socket_pdu("TCP_SERVER", "", "53001", 223, False)
+        self.blocks_tagged_stream_to_pdu_0 = blocks.tagged_stream_to_pdu(blocks.byte_t, "packet_len")
+        self.blocks_stream_to_tagged_stream_0 = blocks.stream_to_tagged_stream(gr.sizeof_char, 1, 56, "packet_len")
+        self.blocks_socket_pdu_0_0_0_0 = blocks.socket_pdu("TCP_SERVER", "", "53002", 223, False)
         self.blocks_socket_pdu_0_0_0 = blocks.socket_pdu("TCP_SERVER", "", "53001", 223, False)
         self.blocks_socket_pdu_0_0 = blocks.socket_pdu("TCP_SERVER", "", "52001", 223, False)
+        self.blocks_socket_pdu_0 = blocks.socket_pdu("TCP_SERVER", "", "51001", 10000, False)
+        self.blocks_message_source_0 = blocks.message_source(gr.sizeof_char*1, blocks_message_source_0_msgq_in)
         self.CC_Byte_Synchronizer_0 = CC_Byte_Synchronizer(
             access_code='11010011100100011101001110010001',
             param_packet_len=223,
@@ -200,6 +210,7 @@ class cc_ordenat(gr.top_block, Qt.QWidget):
         self.msg_connect((self.blocks_socket_pdu_0_0, 'pdus'), (self.CC_9600_TX_0, 'packet'))    
         self.msg_connect((self.blocks_socket_pdu_0_0_0, 'pdus'), (self.usrp_control_pdu_to_pmt_0, 'in'))    
         self.msg_connect((self.blocks_socket_pdu_0_0_0_0, 'pdus'), (self.usrp_control_pdu_to_pmt_0_0, 'in'))    
+        self.msg_connect((self.blocks_tagged_stream_to_pdu_0, 'pdus'), (self.blocks_socket_pdu_0, 'pdus'))    
         self.msg_connect((self.usrp_control_pdu_to_pmt_0, 'out'), (self.uhd_usrp_source_0, 'command'))    
         self.msg_connect((self.usrp_control_pdu_to_pmt_0_0, 'out'), (self.uhd_usrp_sink_0, 'command'))    
         self.connect((self.CC_9600_RX_0, 0), (self.CC_Byte_Synchronizer_0, 0))    
@@ -207,6 +218,8 @@ class cc_ordenat(gr.top_block, Qt.QWidget):
         self.connect((self.CC_9600_RX_0, 2), (self.qtgui_number_sink_0, 0))    
         self.connect((self.CC_9600_RX_0, 3), (self.qtgui_number_sink_1, 0))    
         self.connect((self.CC_9600_TX_0, 0), (self.uhd_usrp_sink_0, 0))    
+        self.connect((self.blocks_message_source_0, 0), (self.blocks_stream_to_tagged_stream_0, 0))    
+        self.connect((self.blocks_stream_to_tagged_stream_0, 0), (self.blocks_tagged_stream_to_pdu_0, 0))    
         self.connect((self.uhd_usrp_source_0, 0), (self.CC_9600_RX_0, 0))    
         self.connect((self.uhd_usrp_source_0, 0), (self.qtgui_sink_x_0, 0))    
 
