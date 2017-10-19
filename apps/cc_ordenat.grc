@@ -159,34 +159,7 @@
     </param>
     <param>
       <key>value</key>
-      <value>50e3</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(8, 229)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>perm_offset</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>50e3</value>
+      <value>1e6</value>
     </param>
   </block>
   <block>
@@ -240,7 +213,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(696, 177)</value>
+      <value>(688, 177)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -318,7 +291,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(392, 174)</value>
+      <value>(336, 174)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -369,7 +342,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(104, 777)</value>
+      <value>(280, 721)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -416,11 +389,11 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(704, 807)</value>
+      <value>(224, 783)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
     </param>
     <param>
       <key>host</key>
@@ -475,7 +448,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(240, 167)</value>
+      <value>(184, 167)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -534,7 +507,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(512, 391)</value>
+      <value>(488, 391)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -550,7 +523,7 @@
     </param>
     <param>
       <key>mtu</key>
-      <value>223</value>
+      <value>255</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -562,7 +535,7 @@
     </param>
     <param>
       <key>port</key>
-      <value>53001</value>
+      <value>52002</value>
     </param>
     <param>
       <key>tcp_no_delay</key>
@@ -570,7 +543,7 @@
     </param>
     <param>
       <key>type</key>
-      <value>"TCP_SERVER"</value>
+      <value>"UDP_SERVER"</value>
     </param>
   </block>
   <block>
@@ -609,7 +582,7 @@
     </param>
     <param>
       <key>mtu</key>
-      <value>223</value>
+      <value>255</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -621,7 +594,7 @@
     </param>
     <param>
       <key>port</key>
-      <value>53002</value>
+      <value>52003</value>
     </param>
     <param>
       <key>tcp_no_delay</key>
@@ -629,7 +602,7 @@
     </param>
     <param>
       <key>type</key>
-      <value>"TCP_SERVER"</value>
+      <value>"UDP_SERVER"</value>
     </param>
   </block>
   <block>
@@ -652,7 +625,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(272, 765)</value>
+      <value>(448, 709)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -707,11 +680,11 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(488, 772)</value>
+      <value>(400, 804)</value>
     </param>
     <param>
       <key>_rotation</key>
-      <value>0</value>
+      <value>180</value>
     </param>
     <param>
       <key>id</key>
@@ -993,7 +966,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(704, 30)</value>
+      <value>(688, 30)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1232,7 +1205,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(856, 527)</value>
+      <value>(920, 431)</value>
     </param>
     <param>
       <key>gui_hint</key>
@@ -1354,7 +1327,7 @@
     </param>
     <param>
       <key>center_freq0</key>
-      <value>uhd.tune_request(freq_tx, lo_offset)</value>
+      <value>freq_tx</value>
     </param>
     <param>
       <key>norm_gain0</key>
@@ -2173,7 +2146,7 @@
     </param>
     <param>
       <key>center_freq0</key>
-      <value>uhd.tune_request(freq_rx, lo_offset)</value>
+      <value>freq_rx</value>
     </param>
     <param>
       <key>dc_offs_enb0</key>
@@ -3256,7 +3229,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(520, 345)</value>
+      <value>(496, 345)</value>
     </param>
     <param>
       <key>_rotation</key>

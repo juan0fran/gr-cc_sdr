@@ -147,33 +147,6 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(232, 173)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-    <param>
-      <key>id</key>
-      <value>perm_offset</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>50e3</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>comment</key>
-      <value></value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
       <value>(16, 349)</value>
     </param>
     <param>
@@ -353,7 +326,7 @@
     </param>
     <param>
       <key>const</key>
-      <value>15278.876454</value>
+      <value>-15278.876454</value>
     </param>
     <param>
       <key>affinity</key>
@@ -675,7 +648,7 @@
     </param>
     <param>
       <key>center_freq</key>
-      <value>- man_offset</value>
+      <value>man_offset</value>
     </param>
     <param>
       <key>comment</key>
@@ -969,7 +942,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(1064, 564)</value>
+      <value>(1048, 564)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -1012,7 +985,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(200, 268)</value>
+      <value>(176, 316)</value>
     </param>
     <param>
       <key>_rotation</key>

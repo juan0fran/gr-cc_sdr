@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Cc Ordenat
-# Generated: Wed Oct  4 09:01:05 2017
+# Generated: Thu Oct 19 17:14:43 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -66,8 +66,7 @@ class cc_ordenat(gr.top_block, Qt.QWidget):
         # Variables
         ##################################################
         self.samp_rate = samp_rate = 480e3
-        self.perm_offset = perm_offset = 50e3
-        self.lo_offset = lo_offset = 50e3
+        self.lo_offset = lo_offset = 1e6
         self.freq_tx = freq_tx = 437.25e6
         self.freq_rx = freq_rx = 437.25e6
 
@@ -89,7 +88,7 @@ class cc_ordenat(gr.top_block, Qt.QWidget):
         	),
         )
         self.uhd_usrp_source_0.set_samp_rate(samp_rate)
-        self.uhd_usrp_source_0.set_center_freq(uhd.tune_request(freq_rx, lo_offset), 0)
+        self.uhd_usrp_source_0.set_center_freq(freq_rx, 0)
         self.uhd_usrp_source_0.set_gain(65, 0)
         self.uhd_usrp_source_0.set_antenna("TX/RX", 0)
         self.uhd_usrp_sink_0 = uhd.usrp_sink(
@@ -101,7 +100,7 @@ class cc_ordenat(gr.top_block, Qt.QWidget):
         	"packet_len",
         )
         self.uhd_usrp_sink_0.set_samp_rate(samp_rate)
-        self.uhd_usrp_sink_0.set_center_freq(uhd.tune_request(freq_tx, lo_offset), 0)
+        self.uhd_usrp_sink_0.set_center_freq(freq_tx, 0)
         self.uhd_usrp_sink_0.set_gain(77.5, 0)
         self.uhd_usrp_sink_0.set_antenna("TX/RX", 0)
         self.uhd_amsg_source_0 = uhd.amsg_source(device_addr="", msgq=uhd_amsg_source_0_msgq_out)
@@ -188,8 +187,8 @@ class cc_ordenat(gr.top_block, Qt.QWidget):
         self.top_layout.addWidget(self._qtgui_number_sink_0_win)
         self.blocks_tagged_stream_to_pdu_0 = blocks.tagged_stream_to_pdu(blocks.byte_t, "packet_len")
         self.blocks_stream_to_tagged_stream_0 = blocks.stream_to_tagged_stream(gr.sizeof_char, 1, 56, "packet_len")
-        self.blocks_socket_pdu_0_0_0_0 = blocks.socket_pdu("TCP_SERVER", "", "53002", 223, False)
-        self.blocks_socket_pdu_0_0_0 = blocks.socket_pdu("TCP_SERVER", "", "53001", 223, False)
+        self.blocks_socket_pdu_0_0_0_0 = blocks.socket_pdu("UDP_SERVER", "", "52003", 255, False)
+        self.blocks_socket_pdu_0_0_0 = blocks.socket_pdu("UDP_SERVER", "", "52002", 255, False)
         self.blocks_socket_pdu_0_0 = blocks.socket_pdu("TCP_SERVER", "", "52001", 223, False)
         self.blocks_socket_pdu_0 = blocks.socket_pdu("TCP_SERVER", "", "51001", 10000, False)
         self.blocks_message_source_0 = blocks.message_source(gr.sizeof_char*1, blocks_message_source_0_msgq_in)
@@ -235,36 +234,28 @@ class cc_ordenat(gr.top_block, Qt.QWidget):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.qtgui_sink_x_0.set_frequency_range(0, self.samp_rate)
-        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
         self.uhd_usrp_sink_0.set_samp_rate(self.samp_rate)
-
-    def get_perm_offset(self):
-        return self.perm_offset
-
-    def set_perm_offset(self, perm_offset):
-        self.perm_offset = perm_offset
+        self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
 
     def get_lo_offset(self):
         return self.lo_offset
 
     def set_lo_offset(self, lo_offset):
         self.lo_offset = lo_offset
-        self.uhd_usrp_source_0.set_center_freq(uhd.tune_request(self.freq_rx, self.lo_offset), 0)
-        self.uhd_usrp_sink_0.set_center_freq(uhd.tune_request(self.freq_tx, self.lo_offset), 0)
 
     def get_freq_tx(self):
         return self.freq_tx
 
     def set_freq_tx(self, freq_tx):
         self.freq_tx = freq_tx
-        self.uhd_usrp_sink_0.set_center_freq(uhd.tune_request(self.freq_tx, self.lo_offset), 0)
+        self.uhd_usrp_sink_0.set_center_freq(self.freq_tx, 0)
 
     def get_freq_rx(self):
         return self.freq_rx
 
     def set_freq_rx(self, freq_rx):
         self.freq_rx = freq_rx
-        self.uhd_usrp_source_0.set_center_freq(uhd.tune_request(self.freq_rx, self.lo_offset), 0)
+        self.uhd_usrp_source_0.set_center_freq(self.freq_rx, 0)
 
 
 def main(top_block_cls=cc_ordenat, options=None):
