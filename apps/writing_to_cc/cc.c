@@ -2,12 +2,28 @@
 #include "link_layer.h"
 #include "of_reed-solomon_gf_2_m.h"
 
+/* COMPILE WITH:
+
+gcc cc.c link_layer.c of_reed-solomon_gf_2_m_api.c socket_utils.c galois_field_codes_utils/*.
+        -I./galois_field_codes_utils/ -I. -lpthread
+
+*/
+
+typedef struct metadata_u{
+    size_t channel;
+    bool has_time_spec;
+    uint8_t time_spec_array[23];
+    uint32_t event_code;
+    uint32_t user_payload[4];
+}metadata_u;
+
 #define BLIND_TEST_DURATION         1000
 #define RETRANSMIT_TEST_DURATION    500
 
 uint8_t cmp_buffer[1740];
 
 static int fd;
+static int feedback_fd;
 
 static int cnt_rx = 0;
 static int phy_rx_count = 0;
@@ -15,8 +31,11 @@ static int phy_tx_count = 0;
 
 chunk_handler_t send_packet_hchunk;
 
+static uint8_t ctrl_val = 0xAA;
+
 void send_packet(void)
 {
+    metadata_u metadata;
     int i;
     link_layer_packet_t ll_packet;
     radio_packet_t radio_packet;
@@ -27,13 +46,18 @@ void send_packet(void)
         ll_packet.fields.payload[i] = i % 256;
     }
     /* Init done */
-    
-    while (get_new_packet_from_chunk(&send_packet_hchunk, ll_packet.raw, (ll_packet.fields.len + LINK_LAYER_HEADER_SIZE),
-                                                    4, &radio_packet) > 0) {
+    write(fd, &ctrl_val, 1);
+    while (get_new_packet_from_chunk(&send_packet_hchunk, ll_packet.raw,
+            (ll_packet.fields.len + LINK_LAYER_HEADER_SIZE), 4, &radio_packet) > 0) {
         write(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE);
     }
     write(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE);
-
+    read(feedback_fd, &metadata, sizeof(metadata));
+    printf("Received event code: %d\n", metadata.event_code);
+    while (metadata.event_code != 2) {
+        read(feedback_fd, &metadata, sizeof(metadata));
+        printf("Received event code: %d\n", metadata.event_code);
+    }
     phy_tx_count += 12;
     printf("Total physical layer transmitter packets: %d\n", phy_tx_count);
 }
@@ -90,6 +114,7 @@ void * receiver_work(void *args)
 
 void transmitter_work(void)
 {
+    metadata_u metadata;
     link_layer_packet_t ll_packet;
     radio_packet_t radio_packet;
     chunk_handler_t hchunk;
@@ -105,17 +130,27 @@ void transmitter_work(void)
     /* Init done */
     cnt = 0;
     while(cnt < BLIND_TEST_DURATION) {
+        write(fd, &ctrl_val, 1);
+        usleep(50000);
         while (get_new_packet_from_chunk(&hchunk, ll_packet.raw,
                                             (ll_packet.fields.len + LINK_LAYER_HEADER_SIZE),
                                             4, &radio_packet) > 0) {
             write(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE);
+            usleep(10000);
         }
         write(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE);
+        read(feedback_fd, &metadata, sizeof(metadata));
+        printf("Received event code: %d\n", metadata.event_code);
+        while (metadata.event_code != 2) {
+            read(feedback_fd, &metadata, sizeof(metadata));
+            printf("Received event code: %d\n", metadata.event_code);
+        }
+
         phy_tx_count += 12;
         printf("Total physical layer transmitter packets: %d\n", phy_tx_count);
         cnt++;
-        printf("Sending packet: %d\n", cnt);
-        sleep(4);
+        printf("Packet %d sent!!\n", cnt);
+        sleep(10);
     }
 }
 
@@ -130,6 +165,7 @@ int main(int argc, char *argv[])
     }
     opt = argv[1][0];
     fd = socket_init(52001);
+    feedback_fd = socket_init(52004);
     if (opt == 't') {           /* packet sending */
         transmitter_work();
     }else if (opt == 'r') {     /* packet receiving */

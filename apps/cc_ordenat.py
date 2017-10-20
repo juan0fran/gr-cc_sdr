@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Cc Ordenat
-# Generated: Thu Oct 19 17:14:43 2017
+# Generated: Fri Oct 20 11:42:03 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -189,8 +189,8 @@ class cc_ordenat(gr.top_block, Qt.QWidget):
         self.blocks_stream_to_tagged_stream_0 = blocks.stream_to_tagged_stream(gr.sizeof_char, 1, 56, "packet_len")
         self.blocks_socket_pdu_0_0_0_0 = blocks.socket_pdu("UDP_SERVER", "", "52003", 255, False)
         self.blocks_socket_pdu_0_0_0 = blocks.socket_pdu("UDP_SERVER", "", "52002", 255, False)
-        self.blocks_socket_pdu_0_0 = blocks.socket_pdu("TCP_SERVER", "", "52001", 223, False)
-        self.blocks_socket_pdu_0 = blocks.socket_pdu("TCP_SERVER", "", "51001", 10000, False)
+        self.blocks_socket_pdu_0_0 = blocks.socket_pdu("TCP_SERVER", "", "52001", 223, True)
+        self.blocks_socket_pdu_0 = blocks.socket_pdu("TCP_SERVER", "", "52004", 255, True)
         self.blocks_message_source_0 = blocks.message_source(gr.sizeof_char*1, blocks_message_source_0_msgq_in)
         self.CC_Byte_Synchronizer_0 = CC_Byte_Synchronizer(
             access_code='11010011100100011101001110010001',

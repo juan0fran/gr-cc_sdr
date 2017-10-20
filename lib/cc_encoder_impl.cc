@@ -181,8 +181,17 @@ cc_encoder_impl::msg_handler(pmt::pmt_t pmt_msg)
                 data_in[i] = 0x00;
 
         memcpy(data_in, pmt::uniform_vector_elements(msg, offset), msg_size);
-
         std::printf("[CC_ENCODER]: Message size: %d\n", msg_size);
+
+        if ((msg_size == 1) && (data_in[0] == 0xAA)) {
+            std::printf("[CC_ENCODER]: Sending 250ms preamble\n");
+            for (int i = 0; i < (d_plen + d_preamble_count + 4); i++)
+                data_out[i] = 0xAA;
+                message_port_pub(pmt::mp("out"),
+                                pmt::cons(pmt::PMT_NIL,
+                                    pmt::init_u8vector(d_plen + d_preamble_count + 4, data_out)));
+                return;
+        }
         if (d_has_rs == true) {
                 if (encode_rs_message(data_in, d_uncoded_len, data_rs_out, d_coded_len) != d_coded_len) {
                         std::printf("[CC_ENCODER]: Encode RS failed\n");
