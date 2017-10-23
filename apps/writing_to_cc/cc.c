@@ -46,12 +46,12 @@ void send_packet(void)
         ll_packet.fields.payload[i] = i % 256;
     }
     /* Init done */
-    write(fd, &ctrl_val, 1);
+    send_udp(&ctrl_val, 1);
     while (get_new_packet_from_chunk(&send_packet_hchunk, ll_packet.raw,
             (ll_packet.fields.len + LINK_LAYER_HEADER_SIZE), 4, &radio_packet) > 0) {
-        write(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE);
+        send_udp(&radio_packet, MAC_UNCODED_PACKET_SIZE);
     }
-    write(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE);
+    send_udp(&radio_packet, MAC_UNCODED_PACKET_SIZE);
     read(feedback_fd, &metadata, sizeof(metadata));
     printf("Received event code: %d\n", metadata.event_code);
     while (metadata.event_code != 2) {
@@ -130,15 +130,13 @@ void transmitter_work(void)
     /* Init done */
     cnt = 0;
     while(cnt < BLIND_TEST_DURATION) {
-        write(fd, &ctrl_val, 1);
-        usleep(50000);
+        send_udp(&ctrl_val, 1);
         while (get_new_packet_from_chunk(&hchunk, ll_packet.raw,
                                             (ll_packet.fields.len + LINK_LAYER_HEADER_SIZE),
                                             4, &radio_packet) > 0) {
-            write(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE);
-            usleep(10000);
+            send_udp(&radio_packet, MAC_UNCODED_PACKET_SIZE);
         }
-        write(fd, &radio_packet, MAC_UNCODED_PACKET_SIZE);
+        send_udp(&radio_packet, MAC_UNCODED_PACKET_SIZE);
         read(feedback_fd, &metadata, sizeof(metadata));
         printf("Received event code: %d\n", metadata.event_code);
         while (metadata.event_code != 2) {
@@ -150,7 +148,7 @@ void transmitter_work(void)
         printf("Total physical layer transmitter packets: %d\n", phy_tx_count);
         cnt++;
         printf("Packet %d sent!!\n", cnt);
-        sleep(10);
+        sleep(2);
     }
 }
 
@@ -164,7 +162,7 @@ int main(int argc, char *argv[])
         return -1;
     }
     opt = argv[1][0];
-    fd = socket_init(52001);
+    fd = socket_init(52000);
     feedback_fd = socket_init(52004);
     if (opt == 't') {           /* packet sending */
         transmitter_work();

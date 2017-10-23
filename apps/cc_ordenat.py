@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Cc Ordenat
-# Generated: Fri Oct 20 11:42:03 2017
+# Generated: Mon Oct 23 11:20:04 2017
 ##################################################
 
 if __name__ == '__main__':
@@ -67,8 +67,8 @@ class cc_ordenat(gr.top_block, Qt.QWidget):
         ##################################################
         self.samp_rate = samp_rate = 480e3
         self.lo_offset = lo_offset = 1e6
-        self.freq_tx = freq_tx = 437.25e6
-        self.freq_rx = freq_rx = 437.25e6
+        self.freq_tx = freq_tx = 437.35e6
+        self.freq_rx = freq_rx = 437.35e6
 
         ##################################################
         # Message Queues
@@ -187,9 +187,10 @@ class cc_ordenat(gr.top_block, Qt.QWidget):
         self.top_layout.addWidget(self._qtgui_number_sink_0_win)
         self.blocks_tagged_stream_to_pdu_0 = blocks.tagged_stream_to_pdu(blocks.byte_t, "packet_len")
         self.blocks_stream_to_tagged_stream_0 = blocks.stream_to_tagged_stream(gr.sizeof_char, 1, 56, "packet_len")
+        self.blocks_socket_pdu_0_0_1 = blocks.socket_pdu("TCP_SERVER", "", "52000", 223, False)
         self.blocks_socket_pdu_0_0_0_0 = blocks.socket_pdu("UDP_SERVER", "", "52003", 255, False)
         self.blocks_socket_pdu_0_0_0 = blocks.socket_pdu("UDP_SERVER", "", "52002", 255, False)
-        self.blocks_socket_pdu_0_0 = blocks.socket_pdu("TCP_SERVER", "", "52001", 223, True)
+        self.blocks_socket_pdu_0_0 = blocks.socket_pdu("UDP_SERVER", "", "52001", 223, False)
         self.blocks_socket_pdu_0 = blocks.socket_pdu("TCP_SERVER", "", "52004", 255, True)
         self.blocks_message_source_0 = blocks.message_source(gr.sizeof_char*1, blocks_message_source_0_msgq_in)
         self.CC_Byte_Synchronizer_0 = CC_Byte_Synchronizer(
@@ -205,7 +206,7 @@ class cc_ordenat(gr.top_block, Qt.QWidget):
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.CC_Byte_Synchronizer_0, 'out'), (self.blocks_socket_pdu_0_0, 'pdus'))    
+        self.msg_connect((self.CC_Byte_Synchronizer_0, 'out'), (self.blocks_socket_pdu_0_0_1, 'pdus'))    
         self.msg_connect((self.blocks_socket_pdu_0_0, 'pdus'), (self.CC_9600_TX_0, 'packet'))    
         self.msg_connect((self.blocks_socket_pdu_0_0_0, 'pdus'), (self.usrp_control_pdu_to_pmt_0, 'in'))    
         self.msg_connect((self.blocks_socket_pdu_0_0_0_0, 'pdus'), (self.usrp_control_pdu_to_pmt_0_0, 'in'))    
@@ -234,8 +235,8 @@ class cc_ordenat(gr.top_block, Qt.QWidget):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.qtgui_sink_x_0.set_frequency_range(0, self.samp_rate)
-        self.uhd_usrp_sink_0.set_samp_rate(self.samp_rate)
         self.uhd_usrp_source_0.set_samp_rate(self.samp_rate)
+        self.uhd_usrp_sink_0.set_samp_rate(self.samp_rate)
 
     def get_lo_offset(self):
         return self.lo_offset

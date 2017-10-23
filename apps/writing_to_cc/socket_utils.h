@@ -35,5 +35,7 @@
 int read_kiss_from_socket(int fd, char * buffer);
 int socket_init();
 
+void send_udp(void *p, size_t len);
+int recv_udp(void *p, size_t mlen);
 #endif 
 

@@ -116,6 +116,64 @@ int read_kiss_from_socket(int fd, char * buffer){
     return i;
 }
 
+void send_udp(void *p, size_t len)
+{
+    int fd;
+    struct hostent *he;
+    /* estructura que recibirá información sobre el nodo remoto */
+    struct sockaddr_in server;
+    /* información sobre la dirección del servidor */
+    if ((he=gethostbyname("localhost"))==NULL){
+        /* llamada a gethostbyname() */
+        perror("gethostbyname() error\n");
+        exit(1);
+    }
+    
+    if ((fd=socket(AF_INET, SOCK_DGRAM, 0))==-1){
+        /* llamada a socket() */
+        printf("socket() error\n");
+        exit(1);
+    }
+    memset(&server, 0, sizeof(server));
+    server.sin_family = AF_INET;
+    server.sin_port = htons(52001);
+    /* htons() es necesaria nuevamente ;-o */
+    server.sin_addr = *((struct in_addr *)he->h_addr);
+    sendto(fd, p, len, 0, (struct sockaddr *)&server, sizeof(server));
+    close(fd);
+}
+
+int recv_udp(void *p, size_t mlen)
+{
+    int ret;
+    int fd;
+    socklen_t slen;
+    struct hostent *he;
+    /* estructura que recibirá información sobre el nodo remoto */
+    struct sockaddr_in server;
+    /* información sobre la dirección del servidor */
+    if ((he=gethostbyname("localhost"))==NULL){
+        /* llamada a gethostbyname() */
+        perror("gethostbyname() error\n");
+        exit(1);
+    }
+    
+    if ((fd=socket(AF_INET, SOCK_DGRAM, 0))==-1){
+        /* llamada a socket() */
+        printf("socket() error\n");
+        exit(1);
+    }
+    memset(&server, 0, sizeof(server));
+    server.sin_family = AF_INET;
+    server.sin_port = htons(52000);
+    /* htons() es necesaria nuevamente ;-o */
+    server.sin_addr = *((struct in_addr *)he->h_addr);
+    printf("Going to Recv from UDP\n");
+    ret = recvfrom(fd, p, mlen, 0, (struct sockaddr *)&server, &slen);
+    printf("Ret: %d\n", ret);
+    close(fd);
+    return ret;
+}
 
 int socket_init(int port){
     int fd;
